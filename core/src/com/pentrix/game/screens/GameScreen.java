@@ -1,44 +1,25 @@
 package com.pentrix.game.screens;
 
-import java.util.Iterator;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
-import com.pentrix.game.Container;
-import com.pentrix.game.Drop;
-import com.pentrix.game.GameField;
-import com.pentrix.game.TextContainer;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.pentrix.game.*;
+
+import java.security.Key;
 
 public class GameScreen extends BaseScreen{
     private int WIDTH, HEIGHT, SPEED = 200;
-    Texture dropT,bucketT,brickT;
-    Sound dropSound;
-    Music rainMusic;
+    public final long BASE_TIME_GAP = 30000000; // 30 ms
     OrthographicCamera camera;
-    Rectangle brick;
-    Array<Rectangle> raindrops;
+    Viewport vp;
     Array<Container> containers;
-    long lastDropTime;
     int dropsGathered;
-    Pixmap pixmap;
     GameField gameField;
     /*font
     private void createLabels(){
@@ -83,96 +64,84 @@ public class GameScreen extends BaseScreen{
         super(game);
         WIDTH = w;
         HEIGHT = h;
-//        gameField = new Sprite((new Texture("droplet.png")));
-//        gameField.setPosition(100, 100);
-//        gameField.setColor(0.1f,0.1f,0.1f,1);
-        gameField = new GameField(WIDTH/4, HEIGHT/4, WIDTH/4, HEIGHT/4);
 
-        pixmap = new Pixmap( 32, 32, Pixmap.Format.RGBA8888 );
-        pixmap.setColor(Color.GREEN);
-        pixmap.fillRectangle(0,0, 32, 32);
-        brickT = new Texture( pixmap );
-        pixmap.dispose();
-        brick = new Rectangle(200,200,32,32);
-
-        // load the images for the droplet and the bucket, 64x64 pixels each
-        dropT = new Texture(Gdx.files.internal("droplet.png"));
-
-        // load the drop sound effect and the rain background "music"
-        dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-        rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
-        rainMusic.setLooping(true);
-
-        // create the camera and the SpriteBatch
-        //camera = new OrthographicCamera();
-        //camera.setToOrtho(false, 800, 480);
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, w, h);
+        vp = new ExtendViewport(w,h , camera);
 
         containers = new Array<Container>();
+        gameField = new GameField(WIDTH/5, HEIGHT/5, WIDTH/3, HEIGHT *3/5, this);
+        containers.add(gameField);
         containers.add(new TextContainer(WIDTH/2, HEIGHT/2, 100, 100, "SAS"));
-
-        // create the raindrops array and spawn the first raindrop
-        raindrops = new Array<Rectangle>();
-        //spawnRaindrop();
-
-        /*createLabels();
-        stage.act();
-        stage.draw();*/
     }
 
-    private void spawnRaindrop() {
-        Rectangle raindrop = new Rectangle();
-        raindrop.x = MathUtils.random(0, WIDTH - 64);
-        raindrop.y = HEIGHT;
-        raindrop.width = 64;
-        raindrop.height = 64;
-        raindrops.add(raindrop);
-        lastDropTime = TimeUtils.nanoTime();
+    @Override
+    public void resize(int width, int height) {
+        vp.update(width, height);
     }
 
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.LIGHT_GRAY);
+        ScreenUtils.clear(Color.BLUE);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // tell the camera to update its matrices.
-        //camera.update();
+        camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
 
-        // tell the SpriteBatch to render in the
-        // coordinate system specified by the camera.
-        //game.batch.setProjectionMatrix(camera.combined);
+        Gdx.input.setInputProcessor(new InputAdapter(){
+            @Override
+            public boolean keyDown(int keycode) {
+                switch (keycode){
+                    case Keys.LEFT:
+                        gameField.setMoveOption(MoveOption.Left);
+                        break;
+                    case Keys.RIGHT:
+                        gameField.setMoveOption(MoveOption.Right);
+                        break;
+                    case Keys.DOWN:
+                        gameField.setMoveOption(MoveOption.Down);
+                        break;
+                    case Keys.UP:
+                        gameField.setRotateFlag(true);
+                        break;
+                }
+                return super.keyDown(keycode);
+            }
+
+            @Override
+            public boolean keyUp(int keycode) {
+                switch (keycode){
+                    case Keys.LEFT:
+                    case Keys.RIGHT:
+                    case Keys.DOWN:
+                        gameField.setMoveOption(MoveOption.None);
+                        break;
+                    case Keys.UP:
+                        gameField.setRotateFlag(false);
+                        break;
+                }
+                return super.keyUp(keycode);
+            }
+        });
 
         game.batch.begin();
-
         for(Container c: containers)
             c.render(game.batch);
-
-
         game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, HEIGHT);
-        gameField.render(game.batch);
-//        int w,h;
-//        w = WIDTH/3;
-//        h = HEIGHT/2;
-////        pixmap = new Pixmap(w,h, Pixmap.Format.RGBA8888);
-////        pixmap.setColor(Color.WHITE);
-////        pixmap.fillRectangle(0,0,w,h);
-////        pixmap.setColor(Color.BLACK);
-////        pixmap.fillRectangle(3,3,w-6,h-6);
-////        game.batch.draw(new Texture(pixmap), w/2,h/3);
-        game.batch.draw(brickT, brick.x, brick.y, brick.width, brick.height);
+        game.batch.end();
 //        for (Rectangle raindrop : raindrops) {
 //            game.batch.draw(dropT, raindrop.x, raindrop.y);
 //        }
 
-        game.batch.end();
 
         // process user input
-        if (Gdx.input.isTouched()) {
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            //camera.unproject(touchPos);
-            //bucket.x = touchPos.x - 64 / 2;
-        }
+//        if (Gdx.input.isTouched()) {
+//            Vector3 touchPos = new Vector3();
+//            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+//            //camera.unproject(touchPos);
+//            //bucket.x = touchPos.x - 64 / 2;
+//        }
 //        if (Gdx.input.isKeyPressed(Keys.LEFT))
 //            bucket.x -= SPEED * Gdx.graphics.getDeltaTime();
 //        if (Gdx.input.isKeyPressed(Keys.RIGHT))
@@ -204,10 +173,10 @@ public class GameScreen extends BaseScreen{
 
     @Override
     public void dispose() {
-        dropT.dispose();
+        //dropT.dispose();
         //bucketT.dispose();
-        dropSound.dispose();
-        rainMusic.dispose();
+//        dropSound.dispose();
+//        rainMusic.dispose();
     }
 
 }

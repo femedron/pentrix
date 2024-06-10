@@ -9,23 +9,22 @@ import com.pentrix.game.Drop;
 
 public class MainMenuScreen extends BaseScreen {
     private int WIDTH, HEIGHT;
-    OrthographicCamera camera;
+//    OrthographicCamera camera;
 
     public MainMenuScreen(final Drop game, int w, int h) {
         super(game);
         WIDTH = w;
         HEIGHT = h;
 
-        //camera = new OrthographicCamera();
-        //camera.setToOrtho(false, WIDTH, HEIGHT);
+//        camera = new OrthographicCamera();
+//        camera.setToOrtho(false, WIDTH, HEIGHT);
     }
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.005f, 0.1f, 0.1f, 1);
-
-        //camera.update();
-        //game.batch.setProjectionMatrix(camera.combined);
+//        camera.update();
+//        game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
         game.font.draw(game.batch, "Welcome to Pentrix!!! ", 100, 150);
@@ -33,7 +32,7 @@ public class MainMenuScreen extends BaseScreen {
         game.batch.end();
 
         if (Gdx.input.isTouched()) {
-            game.setScreen(new GameScreen(game, WIDTH, HEIGHT));//todo
+            game.setScreen(new GameScreen(game, WIDTH, HEIGHT));
             dispose();
         }
     }

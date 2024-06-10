@@ -7,19 +7,20 @@ public class Pentamino {
 
     int[][] pattern; // int[5][5];
     Array<Brick> bricks;
-    double gap = 1,brickSize; // between bricks
+    final double gap,brickSize; // between bricks
     double x,y,size;  // matrix borders
 
     boolean rotateable;
-    public Pentamino(int seed, double xx,double yy, double ssize){
+    public Pentamino(int seed, double xx,double yy, double ssize, GameField gameField){
         x=xx;y=yy;size=ssize;
+        gap = gameField.BRICK_GAP;
+        brickSize = gameField.BRICK_SIZE;
         create(seed);
     }
     private void create(int seed){
         rotateable = true;
         pattern = PatternGenerator.get(seed);
         bricks = new Array<>();
-        brickSize = (size-6*gap)/5;
         for(int i = 5; i > 0; i--){
             bricks.add(new Brick(brickSize));
         }
@@ -54,7 +55,7 @@ public class Pentamino {
             }
         }
     }
-    public void move(int dx, int dy){
+    public void move(double dx, double dy){
         x += dx;
         y += dy;
         updateBricks();
