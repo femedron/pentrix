@@ -2,10 +2,11 @@ package com.pentrix.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.utils.Array;
 
 
-public class Pentamino extends Rectangle {
+public class Pentamino {
 
     int[][] pattern; // int[5][5];
     Array<Brick> bricks;
@@ -24,7 +25,7 @@ public class Pentamino extends Rectangle {
         pattern = PatternGenerator.get(seed);
         bricks = new Array<>();
         for(int i = 5; i > 0; i--){
-            bricks.add(new Brick(brickSize));
+            bricks.add(new Brick(brickSize, gap));
         }
         updateBricks();
     }
@@ -51,8 +52,8 @@ public class Pentamino extends Rectangle {
             for(int j = 0; j<5;j++){
                 int val = pattern[i][j];
                 if(val == 1){
-                    bricks.get(brickNum).x = x + gap + j*(gap + brickSize);
-                    bricks.get(brickNum).y = y + gap + (4-i)*(brickSize + gap);
+                    bricks.get(brickNum).x = (float) (x + gap + j*(gap + brickSize));
+                    bricks.get(brickNum).y = (float) (y + gap + (4-i)*(brickSize + gap));
                     brickNum++;
                 }
             }
@@ -94,12 +95,12 @@ public class Pentamino extends Rectangle {
             isFallable = false;
         }//todo check collisions
         for(Pentamino p: gameField.pentaminoes){
-            if(this.overlaps(p)){ //todo
-                if(y00 < p.y01){
-                    y += p.y01-y00;
-                    isFallable = false;
-                }
-            }
+//            if(this.overlaps(p)){ //todo
+//                if(y00 < p.y01){
+//                    y += p.y01-y00;
+//                    isFallable = false;
+//                }
+//            }
         }
         gameField.setSpawnFlag(!isFallable);
         updateBricks();

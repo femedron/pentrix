@@ -83,7 +83,7 @@ public class GameScreen extends BaseScreen{
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.BLUE);
+        ScreenUtils.clear(Color.GREEN);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
