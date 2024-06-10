@@ -10,19 +10,24 @@ import com.badlogic.gdx.math.Rectangle;
 public class Container {
 
     Texture texture;
-    Rectangle content;
-    public int x,y,width,height;
+    public Rectangle content;
+    public double ox,oy,owidth,oheight;  // outer
+    public double x,y,width,height;
     public Container(int x, int y, int w, int h){
-        this.x=x;
-        this.y=y;
-        width = w;
-        height = h;
+        this.ox=x;
+        this.oy=y;
+        owidth = w;
+        oheight = h;
         int offset = 3;
+        this.x = ox + offset;
+        this.y = oy + offset;
+        this.width = owidth - 2*offset;
+        this.height = oheight - 2*offset;
         content = new Rectangle();
-        content.x = x+offset;
-        content.y = y+offset;
-        content.width = w-2*offset;
-        content.height = h-2*offset;
+        content.x = (float) this.x;
+        content.y = (float) this.y;
+        content.width = (float) this.width;
+        content.height = (float) this.height;
         Pixmap pixmap = new Pixmap(w,h, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fillRectangle(0,0,w,h);
@@ -32,7 +37,7 @@ public class Container {
     }
 
     public void render(SpriteBatch batch){
-        batch.draw(texture, x,y,width,height);
+        batch.draw(texture, (float) ox, (float) oy, (float) owidth, (float) oheight);
         // batch.draw(...);
     }
 

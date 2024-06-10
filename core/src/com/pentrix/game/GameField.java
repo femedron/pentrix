@@ -17,7 +17,7 @@ public class GameField extends Container{
     final double PENTAMINO_SIZE = (5*(9+1)+1) * 2;
     final double BRICK_GAP = 2;
     final double BRICK_SIZE = (PENTAMINO_SIZE-6*BRICK_GAP)/5;
-    final double PENTAMINO_MOVE_DISTANCE = BRICK_SIZE+BRICK_GAP;
+    final double PENTAMINO_MOVE_DISTANCE = BRICK_SIZE+BRICK_GAP; //todo gamescreen height must be multiple of brick with gaps (for smooth fall on ground)
 
     Array<Pentamino> pentaminoes;
     Pentamino activePentamino;
@@ -50,7 +50,7 @@ public class GameField extends Container{
         addPentamino(MathUtils.random(1,18));
     }
     public void addPentamino(int seed){
-        Pentamino p = new Pentamino(seed,x + width/2 - PENTAMINO_SIZE,y + height - PENTAMINO_SIZE,PENTAMINO_SIZE, this);
+        Pentamino p = new Pentamino(seed,x + width /2 - PENTAMINO_SIZE/2,y + height - PENTAMINO_SIZE,PENTAMINO_SIZE, this);
         pentaminoes.add(p);
         activePentamino = p;
     }

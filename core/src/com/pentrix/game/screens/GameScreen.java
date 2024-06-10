@@ -70,7 +70,7 @@ public class GameScreen extends BaseScreen{
         vp = new ExtendViewport(w,h , camera);
 
         containers = new Array<Container>();
-        gameField = new GameField(WIDTH/5, HEIGHT/5, WIDTH/3, HEIGHT *3/5, this);
+        gameField = new GameField(WIDTH/5, HEIGHT/5, WIDTH/3, 600, this);
         containers.add(gameField);
         containers.add(new TextContainer(WIDTH/2, HEIGHT/2, 100, 100, "SAS"));
     }

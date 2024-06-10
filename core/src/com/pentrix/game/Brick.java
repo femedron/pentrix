@@ -14,7 +14,7 @@ public class Brick {
     }
     private void initTexture(){
         Texture texture = new Texture(Gdx.files.internal("raw/brick.png"));
-        textureRegion = TextureRegion.split(texture, 9, 9)[0][0];
+        textureRegion = TextureRegion.split(texture, 9, 9)[0][0];  //todo match certain pattern with texture, color
     }
 
     public void render(SpriteBatch batch){
