@@ -3,6 +3,7 @@ package com.pentrix.game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.pentrix.game.screens.GameScreen;
@@ -13,12 +14,13 @@ public class GameField extends Container{
     final double bricks_count_x = 13;
     final double brick_gap = 2;
     final double pentamino_size, brick_size, pentamino_move_distance;
+
     boolean spawnFlag, rotateFlag, fallFlag;
     MoveOption moveOption;
     long lastMoveTime, lastFallMoveTime;
-
     Array<Pentamino> pentaminoes;
     Pentamino activePentamino;
+    Pentamino[][] tilesMap;
 
     public GameField(double x, double y, double w, double h, long baseTimeGap) {
         super(x, y, w, h);
@@ -34,6 +36,8 @@ public class GameField extends Container{
         moveOption = MoveOption.None;
         setSpawnFlag(true);
         setFallFlag(true);
+
+        tilesMap = new Pentamino[26][(int) bricks_count_x]; //todo: not hardcode 26 lines
     }
 
     public void setSpawnFlag(boolean v){
@@ -64,6 +68,24 @@ public class GameField extends Container{
     void update(){
         long curTime = TimeUtils.nanoTime();
         if(spawnFlag){
+//            for(int i = 0; i<4; i++) {
+//                for(int j = 0; j);
+//                boolean isFilled = true;
+//                double yy = y + brick_gap + (i)*(brick_gap+brick_size);
+//                for (Pentamino p : pentaminoes) {
+//                    if(p.isOnLine(yy))
+//                        figuresToClear++;
+//                    else{
+//                        isFilled = false;
+//                        break;
+//                    }
+//                }
+//                if (isFilled)
+//                    linesToClear++;
+//                else
+//                    break;
+//            }
+
             addPentamino(); //and deactivate previous pentamino
             spawnFlag = false;
         }

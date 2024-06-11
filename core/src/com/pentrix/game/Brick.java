@@ -45,6 +45,9 @@ public class Brick {
     public boolean overlaps(Brick b){
         return collider.overlaps(b.collider);
     }
+    public boolean overlaps(Rectangle rect){
+        return collider.overlaps(rect);
+    }
     public void render(SpriteBatch batch){
         batch.draw(textureRegion, (float) x, (float) y, (float) size, (float) size);
     }

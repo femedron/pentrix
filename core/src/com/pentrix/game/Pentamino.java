@@ -114,7 +114,6 @@ public class Pentamino {
         matrixArea.y = (float) y;
     }
 
-
     void collide(double dx, double dy){
         boolean isFallable = true;
         if (x00 < gameField.x) {
@@ -128,13 +127,21 @@ public class Pentamino {
         }
 
         isFallable &= !collideWithFigures(dx, dy);
-        if(dx != 0 || dy != 0) // NOT ROTATE
-            gameField.setSpawnFlag(!isFallable);
+        if((dx != 0 || dy != 0) && !isFallable) // NOT ROTATE
+            fixPosition();
     }
 
-    /**
-     * @return true if cant fall anymore
-     */
+    void fixPosition(){
+        for(int i = 0; i<5; i++) {
+            Brick brick = bricks.get(i);
+            double xx = brick.getX(), yy = brick.getY();
+            int orderX = (int) ((xx - gameField.x - gap) / (gap+brickSize));
+            int orderY = (int) ((yy - gameField.y - gap) / (gap+brickSize));
+            gameField.tilesMap[orderY][orderX] = this;
+        }
+        gameField.setSpawnFlag(true);
+    }
+
     boolean collideWithFigures(double dx, double dy){
         for(Pentamino p: gameField.pentaminoes){
             if(p != this && overlaps(p)){  // ignore not involved figures
@@ -176,6 +183,15 @@ public class Pentamino {
 
     public boolean overlaps(Pentamino p){
         return matrixArea.overlaps(p.matrixArea);
+    }
+    public boolean isOnLine(double yy){
+        Rectangle line = new Rectangle((float)x00, (float) yy, (float)size, (float) 0.1);
+        for(int i = 4; i >=0; i--){
+            Brick brick = bricks.get(i);
+            if(brick.overlaps(line))
+                return true;
+        }
+        return false;
     }
     public void eraseParts(int lines){
         //remove bricks

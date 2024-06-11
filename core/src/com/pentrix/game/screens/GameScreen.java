@@ -71,22 +71,8 @@ public class GameScreen extends BaseScreen{
         containers = new Array<Container>();
         gameField = new GameField(WIDTH/3-200, HEIGHT/15, WIDTH/3, HEIGHT*13/15, 30000000); // 300 ms todo
         containers.add(gameField);
+
         containers.add(new TextContainer(WIDTH/2, HEIGHT/2, 100, 100, "SAS"));
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        vp.update(width, height);
-    }
-
-
-    @Override
-    public void render(float delta) {
-        ScreenUtils.clear(Color.GREEN);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        camera.update();
-        game.batch.setProjectionMatrix(camera.combined);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
@@ -123,7 +109,21 @@ public class GameScreen extends BaseScreen{
                 return super.keyUp(keycode);
             }
         });
+    }
 
+    @Override
+    public void resize(int width, int height) {
+        vp.update(width, height);
+    }
+
+
+    @Override
+    public void render(float delta) {
+        ScreenUtils.clear(Color.GREEN);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         for(Container c: containers)
             c.render(game.batch);

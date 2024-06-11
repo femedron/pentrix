@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 
 public class Container {
-    final double offset = 2;
+    final double offset = 2;//todo change place of definition
     Texture texture;
     public double ox,oy,owidth,oheight;  // outer
     public double x,y,width,height;
