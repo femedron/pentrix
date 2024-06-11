@@ -26,7 +26,7 @@ public class Pentamino {
         create(seed);
     }
     private void create(int seed){
-        pattern = PatternGenerator.get(seed);
+        pattern = PatternGenerator.get(1);
         bricks = new Array<>();
         for(int i = 5; i > 0; i--){
             bricks.add(new Brick(brickSize));
@@ -34,15 +34,18 @@ public class Pentamino {
         updateBricks();
     }
     public void rotate(){
-        int[][] prevPattern = pattern;
+        int[][] ppattern = pattern;
+        double px = x,py = y;       //save
         rotatePattern();
         updateBricks();
-        if (y < gameField.y || collideWithFigures(0,0)){
-            pattern = prevPattern;
-        } else {
-            stayInBounds(0, 0); //collide with container sideways
-        }
+        collide(0, 0);  //ignore figure collisions until get collided with container
         updateBricks();
+        if (collideWithFigures(0,0)){  //Rollback (todo_ normal handling?)
+            pattern = ppattern;
+            putFigure(px,py);
+            updateBricks();
+        }
+
     }
     private void rotatePattern(){
         final int M = pattern.length;
@@ -68,6 +71,10 @@ public class Pentamino {
                 }
             }
         }
+        updateEdges();
+    }
+
+    private void updateEdges(){
         //find edge coords
         x00 = y00 = Double.MAX_VALUE;
         x01 = y01 = -1;
@@ -91,7 +98,7 @@ public class Pentamino {
     public void move(double dx, double dy){
         shiftFigure(dx,dy);
         updateBricks();
-        stayInBounds(dx,dy);
+        collide(dx,dy);
         updateBricks();
     }
 
@@ -101,26 +108,28 @@ public class Pentamino {
         matrixArea.x = (float) x;
         matrixArea.y = (float) y;
     }
+    void putFigure(double xx, double yy){
+        x = xx; y = yy;
+        matrixArea.x = (float) x;
+        matrixArea.y = (float) y;
+    }
 
 
-
-    void stayInBounds(double dx, double dy){
+    void collide(double dx, double dy){
         boolean isFallable = true;
         if (x00 < gameField.x) {
             shiftFigure(gameField.x - x00, 0);
         } else if (x01 > gameField.x + gameField.width) {
             shiftFigure(gameField.x + gameField.width - x01,0);
         }
-        if (y < gameField.y) {
+        if (y00 < gameField.y) {
             shiftFigure(0,gameField.y - y00);
             isFallable = false;
         }
 
-        boolean result = !collideWithFigures(dx, dy);
-        if(dx != 0 || dy != 0) {
-            isFallable &= result;
-        }
-        gameField.setSpawnFlag(!isFallable);
+        isFallable &= !collideWithFigures(dx, dy);
+        if(dx != 0 || dy != 0) // NOT ROTATE
+            gameField.setSpawnFlag(!isFallable);
     }
 
     /**
