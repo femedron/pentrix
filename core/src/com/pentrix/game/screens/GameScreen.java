@@ -14,8 +14,7 @@ import com.pentrix.game.*;
 import java.security.Key;
 
 public class GameScreen extends BaseScreen{
-    private int WIDTH, HEIGHT, SPEED = 200;
-    public final long BASE_TIME_GAP = 30000000; // 30 ms
+    private double WIDTH, HEIGHT;
     OrthographicCamera camera;
     Viewport vp;
     Array<Container> containers;
@@ -70,7 +69,7 @@ public class GameScreen extends BaseScreen{
         vp = new ExtendViewport(w,h , camera);
 
         containers = new Array<Container>();
-        gameField = new GameField(WIDTH/5, HEIGHT/5, WIDTH/3, 600, this);
+        gameField = new GameField(WIDTH/3-200, HEIGHT/15, WIDTH/3, HEIGHT*13/15, 30000000); // 300 ms todo
         containers.add(gameField);
         containers.add(new TextContainer(WIDTH/2, HEIGHT/2, 100, 100, "SAS"));
     }
@@ -128,51 +127,14 @@ public class GameScreen extends BaseScreen{
         game.batch.begin();
         for(Container c: containers)
             c.render(game.batch);
-        game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, HEIGHT);
+        game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, (float)HEIGHT);
         game.batch.end();
-//        for (Rectangle raindrop : raindrops) {
-//            game.batch.draw(dropT, raindrop.x, raindrop.y);
-//        }
-
-
-        // process user input
-//        if (Gdx.input.isTouched()) {
-//            Vector3 touchPos = new Vector3();
-//            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-//            //camera.unproject(touchPos);
-//            //bucket.x = touchPos.x - 64 / 2;
-//        }
-//        if (Gdx.input.isKeyPressed(Keys.LEFT))
-//            bucket.x -= SPEED * Gdx.graphics.getDeltaTime();
-//        if (Gdx.input.isKeyPressed(Keys.RIGHT))
-//            bucket.x += SPEED * Gdx.graphics.getDeltaTime();
-
-        // make sure the bucket stays within the screen bounds
-//        if (bucket.x < 0)
-//            bucket.x = 0;
-//        if (bucket.x > WIDTH - 64)
-//            bucket.x = WIDTH - 64;
-
-        // check if we need to create a new raindrop
-//        if (TimeUtils.nanoTime() - lastDropTime > 1000000000)
-//            spawnRaindrop();
-
-//        Iterator<Rectangle> iter = raindrops.iterator();
-//        while (iter.hasNext()) {
-//            Rectangle raindrop = iter.next();
-//            raindrop.y -= SPEED * Gdx.graphics.getDeltaTime();
-//            if (raindrop.y + 64 < 0)
-//                iter.remove();
-//            if (raindrop.overlaps(bucket)) {
-//                dropsGathered++;
-//                dropSound.play();
-//                iter.remove();
-//            }
-       // }
     }
 
     @Override
     public void dispose() {
+        //todo
+
         //dropT.dispose();
         //bucketT.dispose();
 //        dropSound.dispose();

@@ -7,8 +7,8 @@ import com.pentrix.game.Drop;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		int w = 1200;
-		int h = 900;
+		int w = 1136;//1200;
+		int h = 870;//900;
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setWindowedMode(w,h);

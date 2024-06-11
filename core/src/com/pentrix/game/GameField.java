@@ -7,25 +7,28 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.pentrix.game.screens.GameScreen;
 
-
 public class GameField extends Container{
-
+    final double x,y,width,height;
+    final long fallTimeGap, baseTimeGap;
+    final double bricks_count_x = 13;
+    final double brick_gap = 2;
+    final double pentamino_size, brick_size, pentamino_move_distance;
     boolean spawnFlag, rotateFlag, fallFlag;
     MoveOption moveOption;
     long lastMoveTime, lastFallMoveTime;
-    final long fallTimeGap, baseTimeGap;
-    final double PENTAMINO_SIZE = (5*(9+1)+1) * 2;
-    final double BRICK_GAP = 2;
-    final double BRICK_SIZE = (PENTAMINO_SIZE-6*BRICK_GAP)/5;
-    final double PENTAMINO_MOVE_DISTANCE = BRICK_SIZE+BRICK_GAP; //todo gamescreen height must be multiple of brick with gaps (for smooth fall on ground)
 
     Array<Pentamino> pentaminoes;
     Pentamino activePentamino;
 
-    public GameField(int x, int y, int w, int h, GameScreen gameScreen) {
+    public GameField(double x, double y, double w, double h, long baseTimeGap) {
         super(x, y, w, h);
-        baseTimeGap = gameScreen.BASE_TIME_GAP;
-        fallTimeGap = baseTimeGap * 5;
+        this.x = x;this.y = y; width = w;height = h;
+        this.baseTimeGap = baseTimeGap;
+        fallTimeGap = baseTimeGap * 7;  //todo
+        brick_size = (w-(bricks_count_x+1)*brick_gap)/bricks_count_x;
+        pentamino_move_distance = brick_size+brick_gap;
+        pentamino_size = 6*brick_gap+5*brick_size;
+
         lastMoveTime = lastFallMoveTime = -1;
         pentaminoes = new Array<>();
         moveOption = MoveOption.None;
@@ -50,7 +53,10 @@ public class GameField extends Container{
         addPentamino(MathUtils.random(1,18));
     }
     public void addPentamino(int seed){
-        Pentamino p = new Pentamino(seed,x + width /2 - PENTAMINO_SIZE/2,y + height - PENTAMINO_SIZE,PENTAMINO_SIZE, this);
+        Pentamino p = new Pentamino(seed,x + ((bricks_count_x-5)/2)*pentamino_move_distance,
+                y +(22)*pentamino_move_distance,
+                pentamino_size,
+                this);
         pentaminoes.add(p);
         activePentamino = p;
     }
@@ -58,7 +64,7 @@ public class GameField extends Container{
     void update(){
         long curTime = TimeUtils.nanoTime();
         if(spawnFlag){
-            addPentamino();
+            addPentamino(); //and deactivate previous pentamino
             spawnFlag = false;
         }
         if(rotateFlag){
@@ -66,7 +72,7 @@ public class GameField extends Container{
             rotateFlag = false;
         }
         if(fallFlag && curTime - lastFallMoveTime > fallTimeGap) {
-            activePentamino.move(0, -PENTAMINO_MOVE_DISTANCE);
+            activePentamino.move(0, -pentamino_move_distance);
             lastFallMoveTime = TimeUtils.nanoTime();
         }
         boolean moved = false;
@@ -74,19 +80,19 @@ public class GameField extends Container{
             case None: break;
             case Down:
                 if(curTime - lastMoveTime > baseTimeGap) {
-                    activePentamino.move(0, -PENTAMINO_MOVE_DISTANCE);
+                    activePentamino.move(0, -pentamino_move_distance);
                     moved = true;
                 }
                 break;
             case Right:
                 if(curTime - lastMoveTime > baseTimeGap){
-                    activePentamino.move(PENTAMINO_MOVE_DISTANCE, 0);
+                    activePentamino.move(pentamino_move_distance, 0);
                     moved = true;
                 }
                 break;
             case Left:
                 if(curTime - lastMoveTime > baseTimeGap) {
-                    activePentamino.move(-PENTAMINO_MOVE_DISTANCE, 0);
+                    activePentamino.move(-pentamino_move_distance, 0);
                     moved = true;
                 }
                 break;

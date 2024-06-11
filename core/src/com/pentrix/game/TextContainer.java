@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class TextContainer extends Container{
 
     String text;
-    public TextContainer(int x, int y, int w, int h, String text) {
+    public TextContainer(double x, double y, double w, double h, String text) {
         super(x, y, w, h);
         this.text = text;
     }
@@ -14,7 +14,7 @@ public class TextContainer extends Container{
     @Override
     public void render(SpriteBatch batch) {
         super.render(batch);
-        new BitmapFont().draw(batch, text, content.x, content.y);
+        new BitmapFont().draw(batch, text, (float)x, (float)y);
     }
 
 //    public void setTextContent(String text){
