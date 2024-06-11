@@ -26,7 +26,7 @@ public class Pentamino {
         create(seed);
     }
     private void create(int seed){
-        pattern = PatternGenerator.get(1);
+        pattern = PatternGenerator.get(seed);
         bricks = new Array<>();
         for(int i = 5; i > 0; i--){
             bricks.add(new Brick(brickSize));

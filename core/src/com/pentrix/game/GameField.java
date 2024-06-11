@@ -89,12 +89,14 @@ public class GameField extends Container{
                     activePentamino.move(pentamino_move_distance, 0);
                     moved = true;
                 }
+                moveOption = MoveOption.None; // remove holding of key
                 break;
             case Left:
                 if(curTime - lastMoveTime > baseTimeGap) {
                     activePentamino.move(-pentamino_move_distance, 0);
                     moved = true;
                 }
+                moveOption = MoveOption.None; // remove holding of key
                 break;
         }
         if(moved)
