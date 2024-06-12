@@ -29,9 +29,15 @@ public class Brick {
 
     TextureRegion textureRegion;
     Rectangle collider;
+    GameField gameField;
+    double gap;
+    Pentamino pentamino;
 
-    public Brick(double size){
-        this.size = size;
+    public Brick(Pentamino pentamino){
+        this.pentamino = pentamino;
+        gameField = pentamino.gameField;
+        this.size = gameField.brick_size;
+        gap = gameField.brick_gap;
         initTexture();
         collider = new Rectangle();
         collider.width = (float) size;
@@ -42,12 +48,36 @@ public class Brick {
         textureRegion = TextureRegion.split(texture, 9, 9)[0][0];  //todo match certain pattern with texture, color
     }
 
+//    public boolean isOnLine(double yy){
+//        return y <= yy && yy <= y+size;
+//    }
+    public Point calcMatrixPoint(){
+        double xx = getX(), yy = getY();
+        int orderX = (int) ((xx - gameField.x - gap + size/2) / (gap + size));
+        int orderY = (int) ((yy - gameField.y - gap + size/2) / (gap + size));
+        return new Point(orderX, orderY);
+    }
+    public void setCoords(int mx, int my){
+        setX(gameField.x + gap + (mx)*(gap+size));
+        setY(gameField.y + gap + (my)*(gap+size));
+    }
+//    public Point calcPatternPoint(){
+//        int patternX = (int) ((getX() - gap - pentamino.x + size/2) / (gap+size));
+//        int patternY = (int) ((getY() - gap - pentamino.y + size/2) / (gap+size));
+//        patternY = 4 - patternY; // reverse order in pattern[]
+//        return new Point(patternX,patternY);
+//    }
+
+    public void remove(){
+        pentamino.removeBrick(this);
+    }
+
     public boolean overlaps(Brick b){
         return collider.overlaps(b.collider);
     }
-    public boolean overlaps(Rectangle rect){
-        return collider.overlaps(rect);
-    }
+//    public boolean overlaps(Rectangle rect){
+//        return collider.overlaps(rect);
+//    }
     public void render(SpriteBatch batch){
         batch.draw(textureRegion, (float) x, (float) y, (float) size, (float) size);
     }

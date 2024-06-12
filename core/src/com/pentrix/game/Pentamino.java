@@ -17,63 +17,32 @@ public class Pentamino {
     Rectangle matrixArea; //for overlap speed improving
     double x00,x01,y00,y01; // real borders (edges of bricks) with outer gaps
     GameField gameField;
+    boolean fixed;
     public Pentamino(int seed, double xx,double yy, double ssize, GameField gameField){
         x=xx;y=yy;size=ssize;
         matrixArea = new Rectangle((float) x,(float)y,(float)size,(float)size);
         this.gameField = gameField;
         gap = gameField.brick_gap;
         brickSize = gameField.brick_size;
+        fixed = false;
         create(seed);
-    }
-    private void create(int seed){
-        pattern = PatternGenerator.get(seed);
-        bricks = new Array<>();
-        for(int i = 5; i > 0; i--){
-            bricks.add(new Brick(brickSize));
-        }
-        updateBricks();
-    }
-    public void rotate(){
-        int[][] ppattern = pattern;
-        double px = x,py = y;       //save
-        rotatePattern();
-        updateBricks();
-        collide(0, 0);  //ignore figure collisions until get collided with container
-        updateBricks();
-        if (collideWithFigures(0,0)){  //Rollback (todo_ normal handling?)
-            pattern = ppattern;
-            putFigure(px,py);
-            updateBricks();
-        }
-
-    }
-    private void rotatePattern(){
-        final int M = pattern.length;
-        final int N = pattern[0].length;
-        int[][] ret = new int[N][M];
-        for (int r = 0; r < M; r++) {
-            for (int c = 0; c < N; c++) {
-                ret[c][M-1-r] = pattern[r][c];
-            }
-        }
-        pattern = ret;
     }
     private void updateBricks(){
         //set bricks coords
         int brickNum = 0;
-        for (int i = 0; i<5;i++) {
-            for(int j = 0; j<5;j++){
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
                 int val = pattern[i][j];
-                if(val == 1){
-                    bricks.get(brickNum).setX((x + gap + j*(gap + brickSize)));
-                    bricks.get(brickNum).setY((y + gap + (4-i)*(brickSize + gap)));
+                if (val == 1) {
+                    Brick brick = bricks.get(brickNum);
+                    brick.setX((x + gap + j * (gap + brickSize)));
+                    brick.setY((y + gap + (4 - i) * (brickSize + gap)));
                     brickNum++;
                 }
             }
         }
         updateEdges();
     }
-
     private void updateEdges(){
         //find edge coords
         x00 = y00 = Double.MAX_VALUE;
@@ -95,25 +64,52 @@ public class Pentamino {
         x00-=gap; y00-=gap; //outer gaps
         x01+=gap; y01+=gap;
     }
+    public void rotate(){
+        int[][] ppattern = pattern;
+        double px = x,py = y;       //save
+        rotatePattern();
+        updateBricks();
+        collide(0, 0);  //ignore figure collisions until get collided with container
+        updateBricks();
+        if (collideWithFigures(0,0)){  //Rollback (todo_ normal handling?)
+            pattern = ppattern;
+            putFigure(px,py);
+            updateBricks();
+        }
+        tryFixPosition();
+    }
+    private void rotatePattern(){
+        final int M = pattern.length;
+        final int N = pattern[0].length;
+        int[][] ret = new int[N][M];
+        for (int r = 0; r < M; r++) {
+            for (int c = 0; c < N; c++) {
+                ret[c][M-1-r] = pattern[r][c];
+            }
+        }
+        pattern = ret;
+    }
+
     public void move(double dx, double dy){
         shiftFigure(dx,dy);
         updateBricks();
         collide(dx,dy);
         updateBricks();
+        tryFixPosition();
+        System.err.println("Y = "+y+", gamefield.y = "+gameField.y);
     }
-
     void shiftFigure(double dx, double dy ){
         x += dx;
         y += dy;
         matrixArea.x = (float) x;
         matrixArea.y = (float) y;
     }
+
     void putFigure(double xx, double yy){
         x = xx; y = yy;
         matrixArea.x = (float) x;
         matrixArea.y = (float) y;
     }
-
     void collide(double dx, double dy){
         boolean isFallable = true;
         if (x00 < gameField.x) {
@@ -127,24 +123,61 @@ public class Pentamino {
         }
 
         isFallable &= !collideWithFigures(dx, dy);
-        if((dx != 0 || dy != 0) && !isFallable) // NOT ROTATE
-            fixPosition();
+        if((dx != 0 || dy != 0)) // NOT ROTATE
+            fixed = !isFallable;
     }
 
-    void fixPosition(){
-        for(int i = 0; i<5; i++) {
-            Brick brick = bricks.get(i);
-            double xx = brick.getX(), yy = brick.getY();
-            int orderX = (int) ((xx - gameField.x - gap) / (gap+brickSize));
-            int orderY = (int) ((yy - gameField.y - gap) / (gap+brickSize));
-            gameField.tilesMap[orderY][orderX] = this;
+    void tryFixPosition(){
+        if(fixed) {
+            gameField.setSpawnFlag(true);//todo
         }
-        gameField.setSpawnFlag(true);
     }
 
+//    /**
+//     * @return bricks cleared
+//     */
+//    public int clearLowestLine(){
+//        double lineY = y00 + gap+ brickSize/2; //lowest line
+//        int count = removeBricks(lineY);
+//        setTilesPosition();
+//        updateBricks();
+//        return count;
+//    }
+//    public int clearLine(int order){
+//        double lineY = y + gap + brickSize/2 + order*(gap+brickSize);
+//        int count = removeBricks(lineY);
+//        setTilesPosition();
+//        updateBricks();
+//        return count;
+//    }
+
+//    private int removeBricks(double lineY){
+//        int count = 0;
+//        for (Brick brick: bricks) {
+//            if(brick.isOnLine(lineY)) {
+//                removeBrick(brick);
+//                count++;
+//            }
+//        }
+//        return count;
+//    }
+
+//    public int bricksOnLine(double yy){
+//        int count = 0;
+//        for(int i = 0; i < bricks.size; i++){
+//            Brick brick = bricks.get(i);
+//            if(brick.isOnLine(yy))
+//                count++;
+//        }
+//        return count;
+//    }
+
+    public void removeBrick(Brick brick){
+        bricks.removeValue(brick, true);
+    }
     boolean collideWithFigures(double dx, double dy){
         for(Pentamino p: gameField.pentaminoes){
-            if(p != this && overlaps(p)){  // ignore not involved figures
+            if(p != this){  // ignore not involved figures
                 for (Brick brick: bricks) {
                     for(Brick brickP: p.bricks){
                         if(brick.overlaps(brickP)) {
@@ -158,21 +191,6 @@ public class Pentamino {
                                 shiftFigure(brickP.getX()-brick.getX(),brickP.getY()-brick.getY()-Math.signum(dy)*(brickSize+gap));
                                 return true;
                             }
-//                    if (Math.abs(brick.y - brickP.y) < 5) {//todo
-//                        if (brick.x < brickP.x + brickP.size + gap) {
-//                            x += brickP.x + brickP.size + gap - brick.x;
-//                            return true;
-//                        } else if (brick.x + brick.size + gap > brickP.x) {
-//                            x -= brick.x + brick.size + gap - brickP.x;
-//                            return true;
-//                        }
-//                    }
-//                    if (Math.abs(brick.x - brickP.x) < 5) {//todo
-//                        if (brick.y < brickP.y + brickP.size + gap) {
-//                            y += brickP.y + brickP.size + gap - brick.y;
-//                            return true;
-//                        }
-//                    }
                         }
                     }
                 }
@@ -180,24 +198,18 @@ public class Pentamino {
         }
         return false;
     }
-
     public boolean overlaps(Pentamino p){
         return matrixArea.overlaps(p.matrixArea);
     }
-    public boolean isOnLine(double yy){
-        Rectangle line = new Rectangle((float)x00, (float) yy, (float)size, (float) 0.1);
-        for(int i = 4; i >=0; i--){
-            Brick brick = bricks.get(i);
-            if(brick.overlaps(line))
-                return true;
+    private void create(int seed){
+        pattern = PatternGenerator.get(seed);//debug
+        bricks = new Array<>();
+        for(int i = 5; i > 0; i--){
+            bricks.add(new Brick(this));
         }
-        return false;
-    }
-    public void eraseParts(int lines){
-        //remove bricks
+        updateBricks();
     }
     public void render(SpriteBatch batch){
-        updateBricks();
         for (Brick brick: bricks) {
             brick.render(batch);
         }

@@ -14,13 +14,13 @@ public class GameField extends Container{
     final double bricks_count_x = 13;
     final double brick_gap = 2;
     final double pentamino_size, brick_size, pentamino_move_distance;
-
+    //todo make external calculator
     boolean spawnFlag, rotateFlag, fallFlag;
     MoveOption moveOption;
     long lastMoveTime, lastFallMoveTime;
     Array<Pentamino> pentaminoes;
     Pentamino activePentamino;
-    Pentamino[][] tilesMap;
+    Brick[][] brickMap; //fixed bricks; used for line clearing
 
     public GameField(double x, double y, double w, double h, long baseTimeGap) {
         super(x, y, w, h);
@@ -37,7 +37,7 @@ public class GameField extends Container{
         setSpawnFlag(true);
         setFallFlag(true);
 
-        tilesMap = new Pentamino[26][(int) bricks_count_x]; //todo: not hardcode 26 lines
+        brickMap = new Brick[26][(int) bricks_count_x]; //todo: not hardcode 26 lines
     }
 
     public void setSpawnFlag(boolean v){
@@ -65,27 +65,91 @@ public class GameField extends Container{
         activePentamino = p;
     }
 
+    private int clearLines(){
+        updateBrickMap();
+        int linesStreak = 0;
+        for(int i = 0; i<26; i++) {//todo
+            if(linesStreak == 5)
+                break;
+            else if(isLineFilled(i)) {
+                for (int j = 0; j < bricks_count_x; j++) {
+                    Brick brick = brickMap[i][j];
+                    brick.remove();
+                }
+                linesStreak++;
+            }
+        }
+        return linesStreak;
+    }
+
+    private boolean isLineFilled(int order){
+        for(int i = 0; i< bricks_count_x; i++){
+            if(brickMap[order][i] == null)
+                return false;
+        }
+        return true;
+//        double lineY = y + brick_gap + brick_size/2 + order*(brick_gap+brick_size);
+//        int bricks = 0;
+//        for (Pentamino p: pentaminoes) {
+//            bricks += p.bricksOnLine(lineY);
+//            if(bricks == bricks_count_x)
+//                return true;
+//        }
+//        return false;
+    }
+
+    public void updateBrickMap(){
+        brickMap = new Brick[26][(int) bricks_count_x];
+        for(Pentamino p: pentaminoes) {
+            for(Brick brick: p.bricks) {
+                if (brick != null) {
+                    Point point = brick.calcMatrixPoint();
+                    brickMap[point.y][point.x] = brick;
+                }
+            }
+        }
+    }
+    private void fallFigures(){
+        updateBrickMap();
+        for(int i = 0; i<26; i++){
+            if(brickMap[i] == null || isBrickMapRowEmpty(i)){
+                for(int j = i+1; j<26; j++){
+                    if(brickMap[j] != null && !isBrickMapRowEmpty(j)) {
+                        brickMap[i] = brickMap[j];
+                        brickMap[j] = null;
+                        for (int n = 0; n < bricks_count_x; n++)
+                            if(brickMap[i][n] != null)
+                                brickMap[i][n].setCoords(n, i);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    private boolean isBrickMapRowEmpty(int row){
+        for (Brick el: brickMap[row]) {
+            if(el != null)
+                return false;
+        }
+        return true;
+    }
+
+    private void addScore(int streak){
+        //todo
+    }
+
+    private void handleFilledLines(){
+        int streak = clearLines();
+        if(streak > 0) {
+            addScore(streak);
+            fallFigures();
+        }
+    }
+
     void update(){
         long curTime = TimeUtils.nanoTime();
         if(spawnFlag){
-//            for(int i = 0; i<4; i++) {
-//                for(int j = 0; j);
-//                boolean isFilled = true;
-//                double yy = y + brick_gap + (i)*(brick_gap+brick_size);
-//                for (Pentamino p : pentaminoes) {
-//                    if(p.isOnLine(yy))
-//                        figuresToClear++;
-//                    else{
-//                        isFilled = false;
-//                        break;
-//                    }
-//                }
-//                if (isFilled)
-//                    linesToClear++;
-//                else
-//                    break;
-//            }
-
+            handleFilledLines();
             addPentamino(); //and deactivate previous pentamino
             spawnFlag = false;
         }

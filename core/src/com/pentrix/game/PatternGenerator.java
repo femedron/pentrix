@@ -1,13 +1,6 @@
 package com.pentrix.game;
 
 public class PatternGenerator {
-    static class Point{
-        int x,y;
-        Point(int xx, int yy){
-            x = xx;
-            y = yy;
-        }
-    }
     public static int[][] get(int seed){
         Point[] p = getPoints(seed);
         if(p == null)

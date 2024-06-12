@@ -1,4 +1,4 @@
-package com.pentrix.game;
+package com.badlogic.cubocy;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
