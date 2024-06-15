@@ -4,15 +4,14 @@ import com.badlogic.cubocy.Cubocy;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.pentrix.game.Drop;
+import com.pentrix.game.parameters.GameParameters;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		int w = 1136;//1200;
-		int h = 870;//900;
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
-		config.setWindowedMode(w,h);
-		config.setTitle("pentrix");
-		new Lwjgl3Application(new Drop(w,h), config);
+		config.setWindowedMode(GameParameters.width, GameParameters.height);
+		config.setTitle("Pentrix");
+		new Lwjgl3Application(new Drop(), config);
 	}
 }

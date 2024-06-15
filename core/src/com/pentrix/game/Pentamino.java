@@ -96,7 +96,6 @@ public class Pentamino {
         collide(dx,dy);
         updateBricks();
         tryFixPosition();
-        System.err.println("Y = "+y+", gamefield.y = "+gameField.y);
     }
     void shiftFigure(double dx, double dy ){
         x += dx;

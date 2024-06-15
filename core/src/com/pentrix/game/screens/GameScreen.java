@@ -10,16 +10,19 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pentrix.game.*;
+import com.pentrix.game.parameters.GameParameters;
 
 import java.security.Key;
 
 public class GameScreen extends BaseScreen{
-    private double WIDTH, HEIGHT;
+    GameParameters gp;
+    private double width, height;
     OrthographicCamera camera;
     Viewport vp;
     Array<Container> containers;
     int dropsGathered;
     GameField gameField;
+
     /*font
     private void createLabels(){
         stage = new Stage(new ScreenViewport());
@@ -59,20 +62,20 @@ public class GameScreen extends BaseScreen{
 //        stage.addActor(background);
 //    }
      */
-    public GameScreen(final Drop game, int w, int h) {
+    public GameScreen(final Drop game, GameParameters gp) {
         super(game);
-        WIDTH = w;
-        HEIGHT = h;
+        width = GameParameters.width;
+        height = GameParameters.height;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, w, h);
-        vp = new ExtendViewport(w,h , camera);
+        camera.setToOrtho(false, (float) width, (float) height);
+        vp = new ExtendViewport((float) width, (float) height, camera);
 
         containers = new Array<Container>();
-        gameField = new GameField(WIDTH/3-200, HEIGHT/15, WIDTH/3, HEIGHT*13/15, 30000000); // 300 ms todo
+        gameField = new GameField(width/3-200, height/15, width/3, height*13/15, 30000000); // 300 ms todo
         containers.add(gameField);
 
-        containers.add(new TextContainer(WIDTH/2, HEIGHT/2, 100, 100, "SAS"));
+        containers.add(new TextContainer(width/2, height/2, 100, 100, "SAS"));
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
@@ -127,7 +130,7 @@ public class GameScreen extends BaseScreen{
         game.batch.begin();
         for(Container c: containers)
             c.render(game.batch);
-        game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, (float)HEIGHT);
+        game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, (float)height);
         game.batch.end();
     }
 

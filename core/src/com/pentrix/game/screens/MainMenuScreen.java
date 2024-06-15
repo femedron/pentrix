@@ -4,20 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pentrix.game.Drop;
+import com.pentrix.game.parameters.GameParameters;
 
 
 public class MainMenuScreen extends BaseScreen {
-    private int WIDTH, HEIGHT;
-//    OrthographicCamera camera;
+//    OrthographicCamera camera; todo
 
-    public MainMenuScreen(final Drop game, int w, int h) {
+
+    public MainMenuScreen(final Drop game) {
         super(game);
-        WIDTH = w;
-        HEIGHT = h;
 
 //        camera = new OrthographicCamera();
-//        camera.setToOrtho(false, WIDTH, HEIGHT);
+//        camera.setToOrtho(false, width, height);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class MainMenuScreen extends BaseScreen {
         game.batch.end();
 
         if (Gdx.input.isTouched()) {
-            game.setScreen(new GameScreen(game, WIDTH, HEIGHT));
+            game.setScreen(new GameScreen(game, new GameParameters()));
             dispose();
         }
     }
