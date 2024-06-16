@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 
 public class Container {
-    final double offset = 2;//todo change place of definition
+    public final double offset = 2;
     Texture texture;
     public double ox,oy,owidth,oheight;  // outer
     public double x,y,width,height;
@@ -21,6 +21,10 @@ public class Container {
         pixmap.setColor(Color.BLACK);
         pixmap.fillRectangle((int) offset, (int) offset, (int) width, (int) height);
         texture = new Texture(pixmap);
+    }
+    public void setHighY(double yy){
+        y = yy - height;
+        oy = y-offset;
     }
 
     public void render(SpriteBatch batch){

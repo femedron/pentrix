@@ -6,27 +6,32 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.pentrix.game.parameters.GameParameters;
 import com.pentrix.game.screens.GameScreen;
 
 public class GameField extends Container{
-    final double x,y,width,height;
-    final long fallTimeGap, baseTimeGap;
-    final double bricks_count_x = 13;
-    final double brick_gap = 2;
-    final double pentamino_size, brick_size, pentamino_move_distance;
-    //todo make external calculator
+    public final double x,y,width,height;
+    public final double pentamino_size, brick_size, pentamino_move_distance;
+    final int bricks_count_x,bricks_count_y, brick_gap;
+    long fallTimeGap, baseTimeGap;
     boolean spawnFlag, rotateFlag, fallFlag;
     MoveOption moveOption;
     long lastMoveTime, lastFallMoveTime;
     Array<Pentamino> pentaminoes;
     Pentamino activePentamino;
     Brick[][] brickMap; //fixed bricks; used for line clearing
+    GameParameters gameParameters;
+    FigureContainer figureContainer;
 
-    public GameField(double x, double y, double w, double h, long baseTimeGap) {
+    public GameField(double x, double y, double w, double h, GameParameters gp) {
         super(x, y, w, h);
         this.x = x;this.y = y; width = w;height = h;
-        this.baseTimeGap = baseTimeGap;
-        fallTimeGap = baseTimeGap * 7;  //todo
+        bricks_count_x = gp.brickCountX;
+        bricks_count_y = gp.brickCountY;
+        brick_gap = gp.brickGap;
+        baseTimeGap = gp.baseTimeGap;
+        fallTimeGap = gp.fallTimeGap;
+
         brick_size = (w-(bricks_count_x+1)*brick_gap)/bricks_count_x;
         pentamino_move_distance = brick_size+brick_gap;
         pentamino_size = 6*brick_gap+5*brick_size;
@@ -37,9 +42,11 @@ public class GameField extends Container{
         setSpawnFlag(true);
         setFallFlag(true);
 
-        brickMap = new Brick[26][(int) bricks_count_x]; //todo: not hardcode 26 lines
+        brickMap = new Brick[bricks_count_y][bricks_count_x];
     }
-
+    public void setFigureContainer(FigureContainer fc){
+        figureContainer = fc;
+    }
     public void setSpawnFlag(boolean v){
         spawnFlag = v;
     }
@@ -53,14 +60,10 @@ public class GameField extends Container{
         this.moveOption = moveOption;
     }
 
-    public void addPentamino(){
-        addPentamino(MathUtils.random(1,18));
-    }
-    public void addPentamino(int seed){
-        Pentamino p = new Pentamino(seed,x + ((bricks_count_x-5)/2)*pentamino_move_distance,
-                y +(22)*pentamino_move_distance,
-                pentamino_size,
-                this);
+    public void addPentamino(Pentamino p){
+        p.putFigure(x + (bricks_count_x/2 - 2)*pentamino_move_distance,
+            y + height - ((p.y01+brick_gap)-p.y));
+        p.gameField = this;
         pentaminoes.add(p);
         activePentamino = p;
     }
@@ -150,11 +153,11 @@ public class GameField extends Container{
         long curTime = TimeUtils.nanoTime();
         if(spawnFlag){
             handleFilledLines();
-            addPentamino(); //and deactivate previous pentamino
+            addPentamino(figureContainer.releaseAndUpdate()); //and deactivate previous pentamino
             spawnFlag = false;
         }
         if(rotateFlag){
-            activePentamino.rotate();
+            activePentamino.rotate(false);
             rotateFlag = false;
         }
         if(fallFlag && curTime - lastFallMoveTime > fallTimeGap) {

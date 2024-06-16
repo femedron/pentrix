@@ -1,12 +1,13 @@
 package com.pentrix.game;
 
 public class PatternGenerator {
-    public static int[][] get(int seed){
+    public static int[][] get(int seed, int brickCount){
         Point[] p = getPoints(seed);
         if(p == null)
             return null;
         int[][] ret = new int[5][5];
-        for (Point point: p){
+        for(int i = 0; i< brickCount; i++){
+            Point point = p[i];
             ret[point.y-1][point.x-1] = 1;
         }
         return ret;

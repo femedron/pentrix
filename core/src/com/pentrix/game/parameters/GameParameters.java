@@ -1,20 +1,23 @@
 package com.pentrix.game.parameters;
 
 
-import com.badlogic.gdx.math.Rectangle;
-
 //level start parameters
 public class GameParameters {
 
     public static final int width = 1136, height = 870;
-    public int brickSize, gap, brickCountX, brickCountY;
+    public final int baseBrickSize = 9; //texture size DO NOT CHANGE
+    public final int brickGap, brickCountX, brickCountY;
+    public final long baseTimeGap, fallTimeGap;
+    public final int bricksInFigure;
+    public final boolean bonuses;
     public GameParameters(){
-    }
-    public Rectangle calcGameField(){
-        return null;
-    }
-    public Rectangle calcScoreField(){
-        return null;
+        baseTimeGap = 30000000;
+        fallTimeGap = baseTimeGap * 7;
+        brickGap = 2;
+        bricksInFigure = 5;  // todo for 4
+        brickCountX = 13;
+        brickCountY = 26;
+        bonuses = false;
     }
 
 }

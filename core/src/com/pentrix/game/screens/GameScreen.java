@@ -4,22 +4,27 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pentrix.game.*;
+import com.pentrix.game.Container;
 import com.pentrix.game.parameters.GameParameters;
+
+import java.awt.*;
 
 public class GameScreen extends BaseScreen{
     GameParameters gp;
-    private double width, height;
+    private final double width,height;
     OrthographicCamera camera;
     Viewport vp;
     Array<Container> containers;
-    int dropsGathered;
     GameField gameField;
+    TextContainer score, scoreTop,mode,level;
+    FigureContainer figureContainer;
 
     /*font
     private void createLabels(){
@@ -62,18 +67,15 @@ public class GameScreen extends BaseScreen{
      */
     public GameScreen(final Pentrix game, GameParameters gp) {
         super(game);
-        width = GameParameters.width;
-        height = GameParameters.height;
+        this.gp = gp;
+        width = gp.width;
+        height = gp.height;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, (float) width, (float) height);
         vp = new ExtendViewport((float) width, (float) height, camera);
 
-        containers = new Array<Container>();
-        gameField = new GameField(width/3-200, height/15, width/3, height*13/15, 30000000); // 300 ms todo
-        containers.add(gameField);
-
-        //containers.add(new TextContainer(width/2, height/2, 100, 100, "SAS"));
+        createContainers();
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
@@ -112,6 +114,62 @@ public class GameScreen extends BaseScreen{
         });
     }
 
+    private void createContainers(){
+        containers = new Array<Container>();
+
+        gameField = new GameField(
+                width/3-200,
+                height/15,
+                width/3,
+                height*13/15,
+                gp);
+
+        double xx = gameField.ox+gameField.owidth+100;
+        double yGap = (3*gameField.height/8)/5;
+        score = new TextContainer(
+                xx,
+                0,
+                gameField.width,
+                gameField.height/8,
+                "Score: ",
+                gameField.y + gameField.height);
+        scoreTop = new TextContainer(
+                xx,
+                0,
+                gameField.width,
+                gameField.height/8,
+                "Top score: ",
+                score.oy - yGap);
+        mode = new TextContainer(
+                xx,
+                0,
+                gameField.width,
+                gameField.height/8,
+                "Mode: ",
+                scoreTop.oy - yGap);
+        level = new TextContainer(
+                xx,
+                0,
+                gameField.width,
+                gameField.height/8,
+                "Level: ",
+                mode.oy - yGap);
+        figureContainer = new FigureContainer(
+                xx,
+                level.oy - yGap,
+                gameField.width,
+                level.oy - yGap - gameField.y,
+                gameField,
+                gp);
+
+        containers.add(gameField);
+        containers.add(score);
+        containers.add(scoreTop);
+        containers.add(mode);
+        containers.add(level);
+        containers.add(figureContainer);
+    }
+
     @Override
     public void resize(int width, int height) {
         vp.update(width, height);
@@ -128,7 +186,6 @@ public class GameScreen extends BaseScreen{
         game.batch.begin();
         for(Container c: containers)
             c.render(game.batch);
-        game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, (float)height);
         game.batch.end();
     }
 

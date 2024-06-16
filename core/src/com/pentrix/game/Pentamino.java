@@ -10,6 +10,7 @@ import java.io.Console;
 
 public class Pentamino {
 
+    int seed;
     int[][] pattern; // int[5][5];
     Array<Brick> bricks;
     final double gap,brickSize; // between bricks
@@ -18,20 +19,27 @@ public class Pentamino {
     double x00,x01,y00,y01; // real borders (edges of bricks) with outer gaps
     GameField gameField;
     boolean fixed;
-    public Pentamino(int seed, double xx,double yy, double ssize, GameField gameField){
-        x=xx;y=yy;size=ssize;
-        matrixArea = new Rectangle((float) x,(float)y,(float)size,(float)size);
+    public final int brickCount;
+    public Pentamino(int seed, double xx,double yy, int brickCount, GameField gameField){
+        x=xx;y=yy;
+        this.seed = seed;
+        this.brickCount = brickCount;
         this.gameField = gameField;
         gap = gameField.brick_gap;
         brickSize = gameField.brick_size;
+        size = gap + 5*(gap+brickSize);
+        matrixArea = new Rectangle((float) x,(float)y,(float)size,(float)size);
         fixed = false;
-        create(seed);
+        create();
     }
     private void updateBricks(){
         //set bricks coords
         int brickNum = 0;
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
+                if(brickNum == brickCount){
+                    break;
+                }
                 int val = pattern[i][j];
                 if (val == 1) {
                     Brick brick = bricks.get(brickNum);
@@ -64,7 +72,12 @@ public class Pentamino {
         x00-=gap; y00-=gap; //outer gaps
         x01+=gap; y01+=gap;
     }
-    public void rotate(){
+    public void rotate(boolean force){
+        if(force){
+            rotatePattern();
+            updateBricks();
+            return;
+        }
         int[][] ppattern = pattern;
         double px = x,py = y;       //save
         rotatePattern();
@@ -105,10 +118,29 @@ public class Pentamino {
     }
 
     void putFigure(double xx, double yy){
-        x = xx; y = yy;
+        x = xx;
+        y = yy;
         matrixArea.x = (float) x;
         matrixArea.y = (float) y;
     }
+//    public boolean collide(Container container){
+//        boolean ret = false;
+//        if (x00 < container.x) {
+//            shiftFigure(container.x - x00, 0);
+//            ret = true;
+//        } else if (x01 > container.x + container.width) {
+//            shiftFigure(container.x + container.width - x01,0);
+//            ret = true;
+//        }
+//        if (y00 < container.y) {
+//            shiftFigure(0,container.y - y00);
+//            ret = true;
+//        } else if(y01 > container.y + container.height){
+//            shiftFigure(0,container.y + container.height - y01);
+//            ret = true;
+//        }
+//        return ret;
+//    }
     void collide(double dx, double dy){
         boolean isFallable = true;
         if (x00 < gameField.x) {
@@ -120,6 +152,8 @@ public class Pentamino {
             shiftFigure(0,gameField.y - y00);
             isFallable = false;
         }
+//        if(collide(gameField) && y00 == gameField.y+gap)
+//            isFallable = false;
 
         isFallable &= !collideWithFigures(dx, dy);
         if((dx != 0 || dy != 0)) // NOT ROTATE
@@ -200,15 +234,16 @@ public class Pentamino {
     public boolean overlaps(Pentamino p){
         return matrixArea.overlaps(p.matrixArea);
     }
-    private void create(int seed){
-        pattern = PatternGenerator.get(seed);//debug
+    private void create(){
+        pattern = PatternGenerator.get(seed, brickCount);
         bricks = new Array<>();
-        for(int i = 5; i > 0; i--){
+        for(int i = brickCount; i > 0; i--){
             bricks.add(new Brick(this));
         }
         updateBricks();
     }
     public void render(SpriteBatch batch){
+        updateBricks();
         for (Brick brick: bricks) {
             brick.render(batch);
         }

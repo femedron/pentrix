@@ -112,7 +112,7 @@ public class MainMenuScreen extends BaseScreen {
         restart.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
+                game.setScreen(new GameScreen(game, new GameParameters()));
             }
         });
         newGame.addListener(new ChangeListener() {
