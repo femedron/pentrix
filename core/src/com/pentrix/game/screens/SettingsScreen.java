@@ -1,17 +1,15 @@
 package com.pentrix.game.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.pentrix.game.Pentrix;
-import com.pentrix.game.parameters.GameParameters;
 
-public class EndScreen extends MainMenuScreen{
-    public EndScreen(Pentrix game, BaseScreen parent) {
+public class SettingsScreen extends MainMenuScreen{
+    public SettingsScreen(Pentrix game, BaseScreen parent) {
         super(game, parent);
     }
 
@@ -24,25 +22,25 @@ public class EndScreen extends MainMenuScreen{
         table.setFillParent(true);
         stage.addActor(table);
 
-        TextField entry = new TextField("lal", skin);
+        TextButton back = new TextButton("Go back", skin);  //back to main menu
+        Slider music = new Slider(0,100,1,false,skin);
+        Slider sounds = new Slider(0,100,1,false,skin);
 
-        table.add(new Label("Game over",skin));
+        table.add(new Label("Settings",skin)); //todo align center
         table.row();
-        table.add(new Label("Your score:",skin));
+        table.add(new Label("Music", skin));
+        table.add(music);
         table.row();
-        table.add(new Label("Top score:",skin));
+        table.add(new Label("Sounds", skin));
+        table.add(sounds);
         table.row();
-        table.add(new Label("Enter your name:",skin));
-        table.row();
-        table.add(entry);
+        table.add(back); //todo align center
 
-
-        entry.addListener(new ChangeListener() {
+        back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new LeaderboardScreen(game, parent));
+                game.setScreen(parent);
             }
         });
-
     }
 }

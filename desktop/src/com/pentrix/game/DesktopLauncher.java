@@ -1,9 +1,7 @@
 package com.pentrix.game;
 
-import com.badlogic.cubocy.Cubocy;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.pentrix.game.Drop;
 import com.pentrix.game.parameters.GameParameters;
 
 public class DesktopLauncher {
@@ -12,6 +10,6 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setWindowedMode(GameParameters.width, GameParameters.height);
 		config.setTitle("Pentrix");
-		new Lwjgl3Application(new Drop(), config);
+		new Lwjgl3Application(new Pentrix(), config);
 	}
 }

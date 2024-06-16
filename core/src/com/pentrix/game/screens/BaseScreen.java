@@ -1,12 +1,12 @@
 package com.pentrix.game.screens;
 
 import com.badlogic.gdx.Screen;
-import com.pentrix.game.Drop;
+import com.pentrix.game.Pentrix;
 
 public abstract class BaseScreen implements Screen {
-    final Drop game;
+    final Pentrix game;
 
-    public BaseScreen (Drop game) {
+    public BaseScreen (Pentrix game) {
         this.game = game;
     }
     @Override

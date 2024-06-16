@@ -12,8 +12,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pentrix.game.*;
 import com.pentrix.game.parameters.GameParameters;
 
-import java.security.Key;
-
 public class GameScreen extends BaseScreen{
     GameParameters gp;
     private double width, height;
@@ -62,7 +60,7 @@ public class GameScreen extends BaseScreen{
 //        stage.addActor(background);
 //    }
      */
-    public GameScreen(final Drop game, GameParameters gp) {
+    public GameScreen(final Pentrix game, GameParameters gp) {
         super(game);
         width = GameParameters.width;
         height = GameParameters.height;
@@ -75,7 +73,7 @@ public class GameScreen extends BaseScreen{
         gameField = new GameField(width/3-200, height/15, width/3, height*13/15, 30000000); // 300 ms todo
         containers.add(gameField);
 
-        containers.add(new TextContainer(width/2, height/2, 100, 100, "SAS"));
+        //containers.add(new TextContainer(width/2, height/2, 100, 100, "SAS"));
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
