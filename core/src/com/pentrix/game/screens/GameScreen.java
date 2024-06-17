@@ -221,16 +221,16 @@ public class GameScreen extends BaseScreen{
     }
 
     public void playFallSound(){
-        fallSound.setVolume(0,AppPreferences.instance.getSoundVolume());
-        fallSound.play();
+        long id = fallSound.play();
+        fallSound.setVolume(id,AppPreferences.instance.getSoundVolume());
     }
     public void playLineClearSound(){
-        lineClearSound.setVolume(0,AppPreferences.instance.getSoundVolume());
-        lineClearSound.play();
+        long id = lineClearSound.play();
+        lineClearSound.setVolume(id,AppPreferences.instance.getSoundVolume());
     }
     public void playLevelupSound(){
-        levelupSound.setVolume(0,AppPreferences.instance.getSoundVolume());
-        levelupSound.play();
+        long id = levelupSound.play();
+        levelupSound.setVolume(id,AppPreferences.instance.getSoundVolume());
     }
     void handleLevelup(){
         int newLvl = gameField.lines/4 + 1;
@@ -258,6 +258,13 @@ public class GameScreen extends BaseScreen{
         game.batch.end();
     }
 
+    @Override
+    public void hide() {
+        super.hide();
+        levelupSound.stop();
+        fallSound.stop();
+        lineClearSound.stop();
+    }
 
     @Override
     public void dispose() {
