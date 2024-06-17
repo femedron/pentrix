@@ -1,6 +1,7 @@
 package com.pentrix.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -19,13 +20,16 @@ public class ChooseModeScreen extends MainMenuScreen{
     @Override
     public void show() {
         init(null);
+        useFonts();
 
+        Label.LabelStyle bigLabel = new Label.LabelStyle(minecraft50, Color.WHITE);
+        skin.get(Label.LabelStyle.class).fontColor = Color.BLACK;
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
+        table.defaults().pad(30).fill();
 
-        //create buttons todo: 4 buttons on the left, 'back' and 'quit' buttons in bottom
         TextButton mode1 = new TextButton("1", skin);
         TextButton mode2 = new TextButton("2", skin);
         TextButton mode3 = new TextButton("3", skin);
@@ -33,17 +37,23 @@ public class ChooseModeScreen extends MainMenuScreen{
         TextButton back = new TextButton("Go back", skin);  //back to main menu
         TextButton quit = new TextButton("Quit", skin);
 
-        table.add(mode1).left().padLeft(20).padBottom(10);
-        table.add(new Label("Mode 1 short description",skin));
+        Mode1Parameters mp1 = new Mode1Parameters();
+        Mode2Parameters mp2 = new Mode2Parameters();
+        Mode3Parameters mp3 = new Mode3Parameters();
+        Mode4Parameters mp4 = new Mode4Parameters();
+        table.add(new Label("Choose game mode",bigLabel)).colspan(2);
         table.row();
-        table.add(mode2).left().padLeft(20).padBottom(10);
-        table.add(new Label("Mode 2 short description",skin));
+        table.add(mode1);
+        table.add(new Label(mp1.shortDescription,skin));
         table.row();
-        table.add(mode3).left().padLeft(20).padBottom(10);
-        table.add(new Label("Mode 3 short description",skin));
+        table.add(mode2);
+        table.add(new Label(mp2.shortDescription,skin));
         table.row();
-        table.add(mode4).left().padLeft(20).padBottom(10);
-        table.add(new Label("Mode 4 short description",skin));
+        table.add(mode3);
+        table.add(new Label(mp3.shortDescription,skin));
+        table.row();
+        table.add(mode4);
+        table.add(new Label(mp4.shortDescription,skin));
         table.row();
         table.add(back);
         table.add(quit);

@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.pentrix.game.Pentrix;
@@ -88,13 +91,11 @@ public class MainMenuScreen extends BaseScreen {
         // Create a table that fills the screen. Everything else will go inside this table.
         Table tableL = new Table();
         Table tableR = new Table();
-        tableL.setDebug(true);
         tableL.setFillParent(true);
         tableL.center().left();
         tableL.defaults().center().left().padLeft(20).spaceBottom(10);
         stage.addActor(tableL);
 
-        tableR.setDebug(true);
         tableR.setFillParent(true);
         tableR.center().right();
         tableR.defaults().center().right().padRight(20).spaceBottom(10);
@@ -129,9 +130,19 @@ public class MainMenuScreen extends BaseScreen {
         tableL.row();
 
 
+        //tableR.setBackground();
+
+        Label.LabelStyle lol = new Label.LabelStyle(font30, Color.BLACK);
+//        lol.background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("mine/table.jpg"))));
+//        lol.background.setBottomHeight(lol.background.getBottomHeight()+100);
+//        lol.background.setTopHeight(lol.background.getTopHeight()+100);
         // Text on the right (game tutorial)
-        Label textLabel = new Label("This is some text on the right sideccccccccccccccccccccc" +
-                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.", skin);
+        Label textLabel = new Label("Clear as many rows as possible by arranging the falling shapes of 4 (or even try 5!) blocks each, dont let them fill the screen!\n\n" +
+                "Achieving line streaks gives much more points, while moving to harder next level is done after line clearing.\n\n" +
+                "Control the shape with arrow buttons (arrow up -> rotate the figure). \nWhile in game: press <ESC> to EXIT to menu\n\n\n" +
+                "          Authors:\n" +
+                "          Stetsyk M.,\n" +
+                "          Polianytsia A.", lol);
         textLabel.setWrap(true);
         tableR.add(textLabel).prefWidth(WIDTH/3).maxHeight(HEIGHT*3/4);
 

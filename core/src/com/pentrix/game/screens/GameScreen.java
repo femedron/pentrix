@@ -233,7 +233,7 @@ public class GameScreen extends BaseScreen{
         levelupSound.setVolume(id,AppPreferences.instance.getSoundVolume());
     }
     void handleLevelup(){
-        int newLvl = gameField.lines/4 + 1;
+        int newLvl = gameField.lines/6 + 1;
         if(newLvl > lvl && lvl > 1) {
             lvl = newLvl;
             setLevel(lvl);

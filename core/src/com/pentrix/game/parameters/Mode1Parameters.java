@@ -12,5 +12,7 @@ public class Mode1Parameters extends GameParameters{
         bricksInFigure = 4;
         brickCountX = 10;
         brickCountY = 20;
+        shortDescription = "Classic tetris";
+        description = "4-brick tetraminoes, no bonuses\n\n" + description;
     }
 }

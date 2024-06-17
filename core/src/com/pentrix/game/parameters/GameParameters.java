@@ -15,12 +15,21 @@ public class GameParameters {
     public  boolean bonuses;
     public  int lineReward;
     public int mode;
+    public int lineGoal;
+    public String shortDescription, description;
     public  Rectangle gameField;
     public GameParameters(){
+        lineGoal = 4;
         baseTimeGap = 30000000;
         fallTimeGap = baseTimeGap * 7;
         brickGap = 2;
         lineReward = 100;
+        description =
+                "Level goal: clear "+lineGoal+" lines (next level +1 line)\n\n" +
+                "Line multipliers:\n" +
+                "       2 -> x2\n" +
+                "       3 -> x4\n" +
+                "       4 -> x8\n";
     }
 
 }

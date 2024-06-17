@@ -13,5 +13,7 @@ public class Mode3Parameters extends GameParameters{
         bricksInFigure = 5;
         brickCountX = 13;
         brickCountY = 26;
+        shortDescription = "Pentrix";
+        description = "5-brick pentaminoes, no bonuses\n\n" + description;
     }
 }

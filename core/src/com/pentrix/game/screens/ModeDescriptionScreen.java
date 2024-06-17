@@ -1,14 +1,18 @@
 package com.pentrix.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.pentrix.game.Pentrix;
 import com.pentrix.game.parameters.GameParameters;
+
+import javax.swing.*;
 
 public class ModeDescriptionScreen extends MainMenuScreen{
     GameParameters gameParameters;
@@ -21,17 +25,28 @@ public class ModeDescriptionScreen extends MainMenuScreen{
     @Override
     public void show() {
         init(null);
+        useFonts();
 
+        Label.LabelStyle bigLabel = new Label.LabelStyle(minecraft50, Color.BLACK);
+        skin.get(Label.LabelStyle.class).fontColor = Color.BLACK;
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
+        table.defaults().pad(20).fill().minWidth(WIDTH/3).maxWidth(WIDTH/2);
 
         TextButton play = new TextButton("Play", skin);
         TextButton back = new TextButton("Go back", skin);  //back to main menu
         TextButton quit = new TextButton("Quit", skin);
 
-        table.add(new Label("Mode full description",skin));
+        Label label = new Label(gameParameters.description,skin);
+        label.setWrap(true);
+
+        Label cap = new Label("Mode "+gameParameters.mode,bigLabel);
+        cap.setAlignment(Align.center);
+        table.add(cap);
+        table.row();
+        table.add(label);
         table.row();
         table.add(play);
         table.row();
