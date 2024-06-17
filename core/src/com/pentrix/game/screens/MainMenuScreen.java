@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.pentrix.game.Pentrix;
 import com.pentrix.game.parameters.GameParameters;
+import com.pentrix.game.parameters.Mode1Parameters;
+import com.pentrix.game.parameters.Mode3Parameters;
 
 
 public class MainMenuScreen extends BaseScreen {
@@ -112,7 +114,7 @@ public class MainMenuScreen extends BaseScreen {
         restart.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game, new GameParameters()));
+                game.setScreen(new GameScreen(game, new Mode3Parameters()));
             }
         });
         newGame.addListener(new ChangeListener() {

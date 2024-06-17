@@ -12,7 +12,7 @@ import com.pentrix.game.screens.GameScreen;
 public class GameField extends Container{
     public final double x,y,width,height;
     public final double pentamino_size, brick_size, pentamino_move_distance;
-    final int bricks_count_x,bricks_count_y, brick_gap;
+    final int bricks_count_x,bricks_count_y, brick_gap, lineReward;
     long fallTimeGap, baseTimeGap;
     boolean spawnFlag, rotateFlag, fallFlag;
     MoveOption moveOption;
@@ -22,6 +22,7 @@ public class GameField extends Container{
     Brick[][] brickMap; //fixed bricks; used for line clearing
     GameParameters gameParameters;
     FigureContainer figureContainer;
+    private int score;
 
     public GameField(double x, double y, double w, double h, GameParameters gp) {
         super(x, y, w, h);
@@ -31,6 +32,7 @@ public class GameField extends Container{
         brick_gap = gp.brickGap;
         baseTimeGap = gp.baseTimeGap;
         fallTimeGap = gp.fallTimeGap;
+        lineReward = gp.lineReward;
 
         brick_size = (w-(bricks_count_x+1)*brick_gap)/bricks_count_x;
         pentamino_move_distance = brick_size+brick_gap;
@@ -43,6 +45,7 @@ public class GameField extends Container{
         setFallFlag(true);
 
         brickMap = new Brick[bricks_count_y][bricks_count_x];
+        score = 0;
     }
     public void setFigureContainer(FigureContainer fc){
         figureContainer = fc;
@@ -112,7 +115,7 @@ public class GameField extends Container{
             }
         }
     }
-    private void fallFigures(){
+    private void fallBricks(){
         updateBrickMap();
         for(int i = 0; i<26; i++){
             if(brickMap[i] == null || isBrickMapRowEmpty(i)){
@@ -138,14 +141,14 @@ public class GameField extends Container{
     }
 
     private void addScore(int streak){
-        //todo
+        score += (int) (Math.pow(2,streak-1)*streak*lineReward);
     }
 
     private void handleFilledLines(){
         int streak = clearLines();
         if(streak > 0) {
             addScore(streak);
-            fallFigures();
+            fallBricks();
         }
     }
 

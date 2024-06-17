@@ -13,12 +13,12 @@ import com.badlogic.gdx.utils.Align;
 
 public class TextContainer extends Container{
     Label label;
-    String text;
+    String textBase, text;
     BitmapFont font;
     Skin skin;
     public TextContainer(double x, double y, double w, double h, String text) {
         super(x, y, w, h);
-        this.text = text;
+        this.textBase = text;
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/truetypefont/MinecraftBold.otf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
@@ -45,7 +45,7 @@ public class TextContainer extends Container{
 
     public void setText(String t){
         text = t;
-        label.setText(t);
+        label.setText(textBase+": "+t);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class FigureContainer extends Container{
 
     public Pentamino releaseAndUpdate(){
         Pentamino old = figure;
-        setFigure(new Pentamino(MathUtils.random(1,18),0,0,gp.bricksInFigure,gf));
+        setFigure(new Pentamino(MathUtils.random(1,18),x,y,gp.bricksInFigure,gf));
         return old;
     }
 
@@ -33,8 +33,8 @@ public class FigureContainer extends Container{
     public void setFigure(Pentamino figure){
         this.figure = figure;
         figure.rotate(true);
-        double gapsX = figure.x00 + width - figure.x01;
+        double gapX = width - (figure.x01 - figure.x00) ;
         double gapsY = figure.y00 + height - figure.y01;
-        figure.putFigure(x + gapsX/2 - (figure.x00 - figure.x), y + gapsY/2 - (figure.y00 - figure.y));
+        figure.putFigure(x + gapX/2 - (figure.x00 - figure.x), y + gapsY/2 - (figure.y00 - figure.y));
     }
 }

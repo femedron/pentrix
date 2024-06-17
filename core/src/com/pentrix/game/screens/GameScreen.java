@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -14,7 +15,6 @@ import com.pentrix.game.*;
 import com.pentrix.game.Container;
 import com.pentrix.game.parameters.GameParameters;
 
-import java.awt.*;
 
 public class GameScreen extends BaseScreen{
     GameParameters gp;
@@ -68,8 +68,8 @@ public class GameScreen extends BaseScreen{
     public GameScreen(final Pentrix game, GameParameters gp) {
         super(game);
         this.gp = gp;
-        width = gp.width;
-        height = gp.height;
+        width = gp.gameWidth;
+        height = gp.gameHeight;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, (float) width, (float) height);
@@ -117,12 +117,18 @@ public class GameScreen extends BaseScreen{
     private void createContainers(){
         containers = new Array<Container>();
 
+        Rectangle r = gp.gameField;
         gameField = new GameField(
-                width/3-200,
-                height/15,
-                width/3,
-                height*13/15,
+                r.x,
+                r.y,
+                r.width,
+                r.height-1,
                 gp);
+//                width/3-200,
+//                height/15,
+//                width/3,
+//                height*13/15,
+//                gp);
 
         double xx = gameField.ox+gameField.owidth+100;
         double yGap = (3*gameField.height/8)/5;
@@ -131,28 +137,28 @@ public class GameScreen extends BaseScreen{
                 0,
                 gameField.width,
                 gameField.height/8,
-                "Score: ",
+                "Score",
                 gameField.y + gameField.height);
         scoreTop = new TextContainer(
                 xx,
                 0,
                 gameField.width,
                 gameField.height/8,
-                "Top score: ",
+                "Top score",
                 score.oy - yGap);
         mode = new TextContainer(
                 xx,
                 0,
                 gameField.width,
                 gameField.height/8,
-                "Mode: ",
+                "Mode",
                 scoreTop.oy - yGap);
         level = new TextContainer(
                 xx,
                 0,
                 gameField.width,
                 gameField.height/8,
-                "Level: ",
+                "Level",
                 mode.oy - yGap);
         figureContainer = new FigureContainer(
                 xx,
@@ -168,6 +174,10 @@ public class GameScreen extends BaseScreen{
         containers.add(mode);
         containers.add(level);
         containers.add(figureContainer);
+    }
+
+    public void setScore(int val){
+        score.setText(Integer.toString(val));
     }
 
     @Override

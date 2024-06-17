@@ -44,8 +44,8 @@ public class Brick {
         collider.height = (float) size;
     }
     private void initTexture(){
-        Texture texture = new Texture(Gdx.files.internal("mine/brick.png"));
-        textureRegion = TextureRegion.split(texture, 9, 9)[0][0];  //todo match certain pattern with texture, color
+        Texture texture = new Texture(Gdx.files.internal("mine/brick16.png"));
+        textureRegion = TextureRegion.split(texture, 16, 16)[0][0];  //todo match certain pattern with texture, color
     }
 
 //    public boolean isOnLine(double yy){

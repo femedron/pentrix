@@ -32,7 +32,7 @@ public class Pentamino {
         fixed = false;
         create();
     }
-    private void updateBricks(){
+    public void updateBricks(){
         //set bricks coords
         int brickNum = 0;
         for (int i = 0; i < 5; i++) {
@@ -115,6 +115,7 @@ public class Pentamino {
         y += dy;
         matrixArea.x = (float) x;
         matrixArea.y = (float) y;
+        updateBricks();
     }
 
     void putFigure(double xx, double yy){
@@ -122,6 +123,7 @@ public class Pentamino {
         y = yy;
         matrixArea.x = (float) x;
         matrixArea.y = (float) y;
+        updateBricks();
     }
 //    public boolean collide(Container container){
 //        boolean ret = false;
@@ -243,7 +245,6 @@ public class Pentamino {
         updateBricks();
     }
     public void render(SpriteBatch batch){
-        updateBricks();
         for (Brick brick: bricks) {
             brick.render(batch);
         }
