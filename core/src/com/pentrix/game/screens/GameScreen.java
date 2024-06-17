@@ -3,6 +3,7 @@ package com.pentrix.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
@@ -32,6 +33,9 @@ public class GameScreen extends BaseScreen{
     FigureContainer figureContainer;
     Texture background = new Texture(Gdx.files.internal("mine/sky.jpg"));
     Stage stage;
+
+    Sound fallSound, lineClearSound, levelupSound;
+    int lvl;
 
 
     /*font
@@ -90,6 +94,11 @@ public class GameScreen extends BaseScreen{
         Image bg = new Image(background);
         bg.setFillParent(true);
         stage.addActor(bg);
+
+        fallSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pipe.mp3"));
+        lineClearSound = Gdx.audio.newSound(Gdx.files.internal("sounds/line_clear.mp3"));
+        levelupSound = Gdx.audio.newSound(Gdx.files.internal("sounds/levelup.mp3"));
+
 
         Gdx.input.setInputProcessor(new InputAdapter(){
 
@@ -211,7 +220,26 @@ public class GameScreen extends BaseScreen{
         vp.update(width, height);
     }
 
-
+    public void playFallSound(){
+        fallSound.setVolume(0,AppPreferences.instance.getSoundVolume());
+        fallSound.play();
+    }
+    public void playLineClearSound(){
+        lineClearSound.setVolume(0,AppPreferences.instance.getSoundVolume());
+        lineClearSound.play();
+    }
+    public void playLevelupSound(){
+        levelupSound.setVolume(0,AppPreferences.instance.getSoundVolume());
+        levelupSound.play();
+    }
+    void handleLevelup(){
+        int newLvl = gameField.lines/4 + 1;
+        if(newLvl > lvl && lvl > 1) {
+            lvl = newLvl;
+            setLevel(lvl);
+            playLevelupSound();
+        }
+    }
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.GREEN);
@@ -219,11 +247,10 @@ public class GameScreen extends BaseScreen{
 
         stage.act();
         stage.draw();
-
         game.batch.setProjectionMatrix(camera.combined);
         camera.update();
         setScore(gameField.score);
-        setLevel(gameField.lines/4 + 1);
+        handleLevelup();
         game.batch.begin();
         //game.batch.draw(background, 0, 0, vp.getWorldWidth(), vp.getWorldHeight());
         for(Container c: containers)
@@ -231,11 +258,15 @@ public class GameScreen extends BaseScreen{
         game.batch.end();
     }
 
+
     @Override
     public void dispose() {
         //todo
         background.dispose();
         stage.dispose();
+        levelupSound.dispose();
+        lineClearSound.dispose();
+        fallSound.dispose();
         //dropT.dispose();
         //bucketT.dispose();
 //        dropSound.dispose();

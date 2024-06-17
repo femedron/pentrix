@@ -16,7 +16,7 @@ public class LeaderboardScreen extends MainMenuScreen{
 
     @Override
     public void show() {
-        init();
+        init(null);
 
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();

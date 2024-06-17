@@ -1,25 +1,33 @@
 package com.pentrix.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.pentrix.game.AppPreferences;
 import com.pentrix.game.Pentrix;
 import com.pentrix.game.parameters.GameParameters;
 import jdk.jfr.internal.tool.Main;
 
 public class EndScreen extends MainMenuScreen{
+    Sound gameOverSound;
     public EndScreen(Pentrix game) {
         super(game);
+        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("sounds/gameover.mp3"));
     }
 
     @Override
     public void show() {
-        init();
+        init(null);
 
+        game.stopMusic();
+
+        gameOverSound.setVolume(0, AppPreferences.instance.getSoundVolume());
+        gameOverSound.play();
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
@@ -53,5 +61,11 @@ public class EndScreen extends MainMenuScreen{
             }
         });
 
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        gameOverSound.dispose();
     }
 }

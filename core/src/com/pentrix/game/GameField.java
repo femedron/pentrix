@@ -145,6 +145,7 @@ public class GameField extends Container{
     private void handleFilledLines(){
         int streak = clearLines();
         if(streak > 0) {
+            gameScreen.playLineClearSound();
             lines += streak;
             addScore(streak);
             fallBricks();
@@ -154,6 +155,9 @@ public class GameField extends Container{
     void update(){
         long curTime = TimeUtils.nanoTime();
         if(spawnFlag){
+            if(pentaminoes.size > 0){
+                gameScreen.playFallSound();
+            }
             handleFilledLines();
             if(!addPentamino(figureContainer.releaseAndUpdate())){
                 gameScreen.gameOver();

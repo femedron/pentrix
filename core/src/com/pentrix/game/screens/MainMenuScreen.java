@@ -36,13 +36,15 @@ public class MainMenuScreen extends BaseScreen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
     }
-    void init(){
+    void init(String skinPath){
         Image bg = new Image(backgroundTexture);
         bg.setSize(stage.getWidth(), stage.getHeight());
         this.bg = bg;
         stage.addActor(bg);
 
-        skin = new Skin(Gdx.files.internal("skins/default_skin/uiskin.json"));
+        if(skinPath == null)
+            skinPath = "skins/default_skin/uiskin.json";
+        skin = new Skin(Gdx.files.internal(skinPath));
 
         genFonts();
     }
@@ -60,10 +62,8 @@ public class MainMenuScreen extends BaseScreen {
         minecraft50 = generator.generateFont(parameter);
         generator.dispose(); // don't forget to dispose to avoid memory leaks!
     }
-    @Override
-    public void show() {
-        init();
 
+    void useFonts(){
         TextButton.TextButtonStyle buttonStyle = skin.get(TextButton.TextButtonStyle.class);
         buttonStyle.font = font50;
         buttonStyle.fontColor = Color.WHITE;
@@ -71,6 +71,13 @@ public class MainMenuScreen extends BaseScreen {
         Label.LabelStyle labelStyle = skin.get(Label.LabelStyle.class);
         labelStyle.font = font30;
         labelStyle.fontColor = Color.WHITE;
+    }
+    @Override
+    public void show() {
+        init(null);
+        useFonts();
+
+        game.resumeMusic();
 
         Label.LabelStyle bigLabel = new Label.LabelStyle(minecraft50, Color.WHITE);
 
