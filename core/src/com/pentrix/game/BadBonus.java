@@ -11,7 +11,7 @@ public class BadBonus extends Bonus{
     }
     @Override
     void generateBonus(){
-        switch (MathUtils.random(0,3)){
+        switch (MathUtils.random(0,2)){
             case 0:
                 gameField.spawnToughBrick();
                 break;

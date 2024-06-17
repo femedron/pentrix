@@ -16,6 +16,6 @@ public class Mode4Parameters extends GameParameters{
         bonuses = true;
         shortDescription = "Pentrix with bonuses";
         description = "5-brick pentaminoes, with collectable bonuses: \n" +
-                "unbreakable brick, game tempo change, infinite spin (no falling)\n\n" + description;
+                "game tempo change, infinite spin (no falling)\n\n" + description;
     }
 }

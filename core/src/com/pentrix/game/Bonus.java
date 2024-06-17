@@ -45,7 +45,7 @@ public class Bonus {
         texture = new Texture(Gdx.files.internal("mine/star.png"));
     }
     void generateBonus(){
-        switch (MathUtils.random(0,2)){
+        switch (MathUtils.random(0,1)){
             case 0:
                     gameField.decreaseTempo();
             break;

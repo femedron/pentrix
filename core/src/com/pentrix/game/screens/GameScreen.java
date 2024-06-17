@@ -240,8 +240,10 @@ public class GameScreen extends BaseScreen{
         if(curLvl > level) {
             level = curLvl;
             setLevel(level);
-            if(level > 1)
+            if(level > 1) {
                 playLevelupSound();
+                gameField.levelUp();
+            }
         }
     }
     void handleScore(){

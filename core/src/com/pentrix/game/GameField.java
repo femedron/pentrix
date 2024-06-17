@@ -126,6 +126,9 @@ public class GameField extends Container{
     public void increaseTempo(){
         fallTimeGap = (long) (fallTimeGap * 0.666);
     }
+    public void increaseTempo(double coef){
+        fallTimeGap = (long) (fallTimeGap * coef);
+    }
     public void decreaseTempo(){
         fallTimeGap = (long) (fallTimeGap * 1.5);
     }
@@ -205,6 +208,13 @@ public class GameField extends Container{
         }
     }
 
+    void changeColorPalette(){
+
+    }
+    public void levelUp(){
+        increaseTempo(0.9);
+        changeColorPalette();
+    }
     void update(){
         long curTime = TimeUtils.nanoTime();
         if(spawnFlag){

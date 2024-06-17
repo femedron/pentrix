@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Brick {
@@ -32,12 +33,14 @@ public class Brick {
     GameField gameField;
     double gap;
     Pentamino pentamino;
+    int textureVariant;
 
-    public Brick(Pentamino pentamino){
+    public Brick(Pentamino pentamino, int textureVariant){
         this.pentamino = pentamino;
         gameField = pentamino.gameField;
         this.size = gameField.brick_size;
         gap = gameField.brick_gap;
+        this.textureVariant = textureVariant;
         initTexture();
         collider = new Rectangle();
         collider.width = (float) size;
@@ -45,7 +48,7 @@ public class Brick {
     }
     private void initTexture(){
         Texture texture = new Texture(Gdx.files.internal("mine/brick16.png"));
-        textureRegion = TextureRegion.split(texture, 16, 16)[0][0];  //todo match certain pattern with texture, color
+        textureRegion = TextureRegion.split(texture, 16, 16)[0][textureVariant];
     }
 
 //    public boolean isOnLine(double yy){

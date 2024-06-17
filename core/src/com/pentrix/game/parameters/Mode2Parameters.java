@@ -16,6 +16,6 @@ public class Mode2Parameters extends GameParameters{
         bonuses = true;
         shortDescription = "Tetris with bonuses";
         description = "4-brick tetraminoes, with random bonuses: \n" +
-                "unbreakable brick, game tempo change, infinite spin (no falling)\n\n" + description;
+                "game tempo change, infinite spin (no falling)\n\n" + description;
     }
 }

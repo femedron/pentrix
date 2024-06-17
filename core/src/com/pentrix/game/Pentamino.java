@@ -1,6 +1,7 @@
 package com.pentrix.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.utils.Array;
@@ -190,8 +191,9 @@ public class Pentamino {
     private void create(){
         pattern = PatternGenerator.get(seed, brickCount);
         bricks = new Array<>();
+        int variant = MathUtils.random(0,1);
         for(int i = brickCount; i > 0; i--){
-            bricks.add(new Brick(this));
+            bricks.add(new Brick(this, variant));
         }
         updateBricks();
     }
