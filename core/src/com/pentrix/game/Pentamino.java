@@ -11,7 +11,7 @@ import java.io.Console;
 public class Pentamino {
 
     int seed;
-    int[][] pattern; // int[5][5];
+    int[][] pattern; // int[5][5] or [4][4]
     Array<Brick> bricks;
     final double gap,brickSize; // between bricks
     double x,y,size;  // matrix borders
@@ -35,8 +35,8 @@ public class Pentamino {
     public void updateBricks(){
         //set bricks coords
         int brickNum = 0;
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < brickCount; i++) {
+            for (int j = 0; j < brickCount; j++) {
                 if(brickNum == brickCount){
                     break;
                 }
@@ -44,7 +44,7 @@ public class Pentamino {
                 if (val == 1) {
                     Brick brick = bricks.get(brickNum);
                     brick.setX((x + gap + j * (gap + brickSize)));
-                    brick.setY((y + gap + (4 - i) * (brickSize + gap)));
+                    brick.setY((y + gap + (brickCount-1 - i) * (brickSize + gap))); //todo debug
                     brickNum++;
                 }
             }

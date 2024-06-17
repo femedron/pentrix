@@ -20,7 +20,8 @@ public class FigureContainer extends Container{
 
     public Pentamino releaseAndUpdate(){
         Pentamino old = figure;
-        setFigure(new Pentamino(MathUtils.random(1,18),x,y,gp.bricksInFigure,gf));
+        int random = gp.bricksInFigure == 4 ? MathUtils.random(1,7) : MathUtils.random(1,18);
+        setFigure(new Pentamino(random,x,y,gp.bricksInFigure,gf));
         return old;
     }
 

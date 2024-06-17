@@ -5,7 +5,7 @@ public class PatternGenerator {
         Point[] p = getPoints(seed,brickCount);
         if(p == null)
             return null;
-        int[][] ret = new int[5][5];
+        int[][] ret = new int[brickCount][brickCount];
         for(int i = 0; i< brickCount; i++){
             Point point = p[i];
             ret[point.y-1][point.x-1] = 1;
@@ -16,14 +16,14 @@ public class PatternGenerator {
     private static Point[] getPoints(int seed, int brickCount){
         if(brickCount == 4){
             switch (seed){
-                case 1: return getPoints(1, 5);
-                case 2: return getPoints(7, 5);
-                case 3: return getPoints(8, 5);
-                case 4: return getPoints(9, 5);
-                case 5: return getPoints(12, 5);
-                case 6: return new Point[]{new Point(1, 3), new Point(2, 3), new Point(3, 3), new Point(3, 2), new Point(0, 0)};
-                case 7: return new Point[]{new Point(2, 2), new Point(3, 2), new Point(2, 3), new Point(3, 3), new Point(0, 0)};
-                default: return getPoints(seed, 5);
+                case 1: return new Point[]{new Point(2, 2), new Point(3, 2), new Point(2, 3), new Point(3, 3)};
+                case 2: return new Point[]{new Point(2, 1), new Point(2, 2), new Point(3, 2), new Point(2, 3)};
+                case 3: return new Point[]{new Point(2, 1), new Point(2, 2), new Point(2, 3), new Point(2, 4)};
+                case 4: return new Point[]{new Point(2, 2), new Point(3, 2), new Point(4, 2), new Point(4, 3)};
+                case 5: return new Point[]{new Point(3, 2), new Point(1, 3), new Point(2, 3), new Point(3, 3)};
+                case 6: return new Point[]{new Point(2, 1), new Point(2, 2), new Point(3, 2), new Point(3, 3)};
+                case 7: return new Point[]{new Point(3, 1), new Point(3, 2), new Point(2, 2), new Point(2, 3)};
+                default: return null;
             }
         } else {
             switch (seed) {
