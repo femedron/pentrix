@@ -11,8 +11,10 @@ import com.pentrix.game.Pentrix;
 import com.pentrix.game.parameters.GameParameters;
 
 public class ModeDescriptionScreen extends MainMenuScreen{
-    public ModeDescriptionScreen(Pentrix game, BaseScreen parent) {
-        super(game, parent);
+    GameParameters gameParameters;
+    public ModeDescriptionScreen(Pentrix game, GameParameters gameParameters) {
+        super(game);
+        this.gameParameters = gameParameters;
         backgroundTexture = new Texture(Gdx.files.internal("mine/eminem.jpg"));
     }
 
@@ -40,14 +42,14 @@ public class ModeDescriptionScreen extends MainMenuScreen{
         play.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game, new GameParameters()));
+                game.setScreen(new GameScreen(game, gameParameters));
             }
         });
 
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(parent);
+                game.setScreen(new ChooseModeScreen(game));
             }
         });
 

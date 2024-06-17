@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.pentrix.game.Pentrix;
 
 public class SettingsScreen extends MainMenuScreen{
-    public SettingsScreen(Pentrix game, BaseScreen parent) {
-        super(game, parent);
+    public SettingsScreen(Pentrix game) {
+        super(game);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SettingsScreen extends MainMenuScreen{
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(parent);
+                game.setScreen(new MainMenuScreen(game));
             }
         });
     }

@@ -10,8 +10,8 @@ import com.pentrix.game.Pentrix;
 import com.pentrix.game.parameters.GameParameters;
 
 public class LeaderboardScreen extends MainMenuScreen{
-    public LeaderboardScreen(Pentrix game, BaseScreen parent) {
-        super(game, parent);
+    public LeaderboardScreen(Pentrix game) {
+        super(game);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class LeaderboardScreen extends MainMenuScreen{
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(parent);
+                game.setScreen(new MainMenuScreen(game));
             }
         });
     }

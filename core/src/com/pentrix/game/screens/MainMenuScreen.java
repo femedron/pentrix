@@ -19,19 +19,17 @@ import com.pentrix.game.parameters.Mode3Parameters;
 
 
 public class MainMenuScreen extends BaseScreen {
-    public static MainMenuScreen instance;
     int WIDTH = GameParameters.width,HEIGHT = GameParameters.height;
-    BaseScreen parent;
+    BaseScreen instance;
     Pentrix game;
     Stage stage;
     Skin skin;
     Texture backgroundTexture = new Texture(Gdx.files.internal("mine/navalnyi.jpg"));
     Image bg;
 
-    public MainMenuScreen(Pentrix game, BaseScreen parent) {
+    public MainMenuScreen(Pentrix game) {
         super(game);
         instance = this;
-        this.parent = parent;
         this.game = game;
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -121,27 +119,27 @@ public class MainMenuScreen extends BaseScreen {
         newGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                game.setScreen(new ChooseModeScreen(game, instance));
+                game.setScreen(new ChooseModeScreen(game));
             }
         });
         leaderboard.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                game.setScreen(new LeaderboardScreen(game,instance));
+                game.setScreen(new LeaderboardScreen(game));
             }
         });
 
         settings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new SettingsScreen(game,instance));
+                game.setScreen(new SettingsScreen(game));
             }
         });
 
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new EndScreen(game,instance));
+                game.setScreen(new EndScreen(game));
             }
         });
     }

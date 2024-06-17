@@ -8,11 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.pentrix.game.Pentrix;
-import com.pentrix.game.parameters.GameParameters;
+import com.pentrix.game.parameters.*;
 
 public class ChooseModeScreen extends MainMenuScreen{
-    public ChooseModeScreen(Pentrix game, BaseScreen parent) {
-        super(game, parent);
+    public ChooseModeScreen(Pentrix game) {
+        super(game);
         backgroundTexture = new Texture(Gdx.files.internal("mine/bogdan.png"));
     }
 
@@ -52,32 +52,32 @@ public class ChooseModeScreen extends MainMenuScreen{
         mode1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new ModeDescriptionScreen(game, instance));
+                game.setScreen(new ModeDescriptionScreen(game, new Mode1Parameters()));
             }
         });
         mode2.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
+                game.setScreen(new ModeDescriptionScreen(game, new Mode2Parameters()));
             }
         });
         mode3.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
+                game.setScreen(new ModeDescriptionScreen(game, new Mode3Parameters()));
             }
         });
         mode4.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
+                game.setScreen(new ModeDescriptionScreen(game, new Mode4Parameters()));
             }
         });
 
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(parent);
+                game.setScreen(new MainMenuScreen(game));
             }
         });
 

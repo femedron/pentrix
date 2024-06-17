@@ -9,10 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.pentrix.game.Pentrix;
 import com.pentrix.game.parameters.GameParameters;
+import jdk.jfr.internal.tool.Main;
 
 public class EndScreen extends MainMenuScreen{
-    public EndScreen(Pentrix game, BaseScreen parent) {
-        super(game, parent);
+    public EndScreen(Pentrix game) {
+        super(game);
     }
 
     @Override
@@ -25,6 +26,7 @@ public class EndScreen extends MainMenuScreen{
         stage.addActor(table);
 
         TextField entry = new TextField("lal", skin);
+        TextButton back = new TextButton("Skip", skin);
 
         table.add(new Label("Game over",skin));
         table.row();
@@ -35,12 +37,19 @@ public class EndScreen extends MainMenuScreen{
         table.add(new Label("Enter your name:",skin));
         table.row();
         table.add(entry);
+        table.row();
+        table.add(back);
 
-
+        back.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
         entry.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new LeaderboardScreen(game, parent));
+                game.setScreen(new LeaderboardScreen(game));
             }
         });
 
