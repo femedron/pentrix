@@ -125,24 +125,6 @@ public class Pentamino {
         matrixArea.y = (float) y;
         updateBricks();
     }
-//    public boolean collide(Container container){
-//        boolean ret = false;
-//        if (x00 < container.x) {
-//            shiftFigure(container.x - x00, 0);
-//            ret = true;
-//        } else if (x01 > container.x + container.width) {
-//            shiftFigure(container.x + container.width - x01,0);
-//            ret = true;
-//        }
-//        if (y00 < container.y) {
-//            shiftFigure(0,container.y - y00);
-//            ret = true;
-//        } else if(y01 > container.y + container.height){
-//            shiftFigure(0,container.y + container.height - y01);
-//            ret = true;
-//        }
-//        return ret;
-//    }
     void collide(double dx, double dy){
         boolean isFallable = true;
         if (x00 < gameField.x) {
@@ -168,44 +150,6 @@ public class Pentamino {
         }
     }
 
-//    /**
-//     * @return bricks cleared
-//     */
-//    public int clearLowestLine(){
-//        double lineY = y00 + gap+ brickSize/2; //lowest line
-//        int count = removeBricks(lineY);
-//        setTilesPosition();
-//        updateBricks();
-//        return count;
-//    }
-//    public int clearLine(int order){
-//        double lineY = y + gap + brickSize/2 + order*(gap+brickSize);
-//        int count = removeBricks(lineY);
-//        setTilesPosition();
-//        updateBricks();
-//        return count;
-//    }
-
-//    private int removeBricks(double lineY){
-//        int count = 0;
-//        for (Brick brick: bricks) {
-//            if(brick.isOnLine(lineY)) {
-//                removeBrick(brick);
-//                count++;
-//            }
-//        }
-//        return count;
-//    }
-
-//    public int bricksOnLine(double yy){
-//        int count = 0;
-//        for(int i = 0; i < bricks.size; i++){
-//            Brick brick = bricks.get(i);
-//            if(brick.isOnLine(yy))
-//                count++;
-//        }
-//        return count;
-//    }
 
     public void removeBrick(Brick brick){
         bricks.removeValue(brick, true);
@@ -237,7 +181,7 @@ public class Pentamino {
         return matrixArea.overlaps(p.matrixArea);
     }
     private void create(){
-        pattern = PatternGenerator.get(seed, brickCount);
+        pattern = PatternGenerator.get(1, brickCount);
         bricks = new Array<>();
         for(int i = brickCount; i > 0; i--){
             bricks.add(new Brick(this));

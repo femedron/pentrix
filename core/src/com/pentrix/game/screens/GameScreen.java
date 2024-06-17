@@ -17,6 +17,7 @@ import com.pentrix.game.parameters.GameParameters;
 
 
 public class GameScreen extends BaseScreen{
+    public static GameScreen gameScreen;
     GameParameters gp;
     private final double width,height;
     OrthographicCamera camera;
@@ -67,6 +68,7 @@ public class GameScreen extends BaseScreen{
      */
     public GameScreen(final Pentrix game, GameParameters gp) {
         super(game);
+        gameScreen = this;
         this.gp = gp;
         width = gp.gameWidth;
         height = gp.gameHeight;
@@ -76,6 +78,7 @@ public class GameScreen extends BaseScreen{
         vp = new ExtendViewport((float) width, (float) height, camera);
 
         createContainers();
+        mode.setText(Integer.toString(gp.mode));
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
@@ -122,7 +125,7 @@ public class GameScreen extends BaseScreen{
                 r.x,
                 r.y,
                 r.width,
-                r.height-1,
+                r.height,
                 gp);
 //                width/3-200,
 //                height/15,
@@ -179,6 +182,9 @@ public class GameScreen extends BaseScreen{
     public void setScore(int val){
         score.setText(Integer.toString(val));
     }
+    public void setLevel(int val){
+        level.setText(Integer.toString(val));
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -193,6 +199,8 @@ public class GameScreen extends BaseScreen{
 
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
+        setScore(gameField.score);
+        setLevel(gameField.lines/4 + 1);
         game.batch.begin();
         for(Container c: containers)
             c.render(game.batch);

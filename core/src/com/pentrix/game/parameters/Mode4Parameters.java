@@ -1,7 +1,7 @@
 package com.pentrix.game.parameters;
 
-public class Mode2Parameters extends Mode1Parameters{
-    public Mode2Parameters(){
+public class Mode4Parameters extends Mode3Parameters{
+    public Mode4Parameters(){
         super();
         bonuses = true;
     }

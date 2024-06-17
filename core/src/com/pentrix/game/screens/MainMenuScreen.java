@@ -114,7 +114,7 @@ public class MainMenuScreen extends BaseScreen {
         restart.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game, new Mode3Parameters()));
+                game.setScreen(new GameScreen(game, new Mode1Parameters()));
             }
         });
         newGame.addListener(new ChangeListener() {

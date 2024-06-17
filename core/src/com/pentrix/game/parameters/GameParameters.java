@@ -14,6 +14,7 @@ public class GameParameters {
     public  int bricksInFigure;
     public  boolean bonuses;
     public  int lineReward;
+    public int mode;
     public  Rectangle gameField;
     public GameParameters(){
         baseTimeGap = 30000000;

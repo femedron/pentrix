@@ -22,7 +22,7 @@ public class GameField extends Container{
     Brick[][] brickMap; //fixed bricks; used for line clearing
     GameParameters gameParameters;
     FigureContainer figureContainer;
-    private int score;
+    public int score, lines;
 
     public GameField(double x, double y, double w, double h, GameParameters gp) {
         super(x, y, w, h);
@@ -45,7 +45,7 @@ public class GameField extends Container{
         setFallFlag(true);
 
         brickMap = new Brick[bricks_count_y][bricks_count_x];
-        score = 0;
+        lines = score = 0;
     }
     public void setFigureContainer(FigureContainer fc){
         figureContainer = fc;
@@ -147,6 +147,7 @@ public class GameField extends Container{
     private void handleFilledLines(){
         int streak = clearLines();
         if(streak > 0) {
+            lines += streak;
             addScore(streak);
             fallBricks();
         }
