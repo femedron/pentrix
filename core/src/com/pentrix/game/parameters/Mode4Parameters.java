@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class Mode4Parameters extends GameParameters{
     public Mode4Parameters(){
         super();
+        bonusDelay = 10; //10s
         mode = 4;
         gameWidth = 1332; // 379 * 3
         gameHeight = 1032; // 756 + 2 * 756/12

@@ -90,6 +90,12 @@ public class Pentamino {
             updateBricks();
         }
         tryFixPosition();
+        tryCollectBonus();
+    }
+    void tryCollectBonus(){
+        if(gameField.bonus != null && gameField.bonus.overlaps(this)){
+            gameField.bonus.collect();
+        }
     }
     private void rotatePattern(){
         final int M = pattern.length;
@@ -109,6 +115,7 @@ public class Pentamino {
         collide(dx,dy);
         updateBricks();
         tryFixPosition();
+        tryCollectBonus();
     }
     void shiftFigure(double dx, double dy ){
         x += dx;

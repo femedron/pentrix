@@ -11,19 +11,25 @@ import com.pentrix.game.screens.GameScreen;
 
 public class GameField extends Container{
     public final double x,y,width,height;
-    public final double pentamino_size, brick_size, pentamino_move_distance;
+    public final double brick_size, pentamino_move_distance;
     final int bricks_count_x,bricks_count_y, brick_gap, lineReward;
     long fallTimeGap, baseTimeGap;
     boolean spawnFlag, rotateFlag, fallFlag;
     MoveOption moveOption;
     long lastMoveTime, lastFallMoveTime;
+    long lastBonusSpawnTime;
+    int bonusDelay;// in seconds
     Array<Pentamino> pentaminoes;
     Pentamino activePentamino;
     Brick[][] brickMap; //fixed bricks; used for line clearing
     GameParameters gameParameters;
     GameScreen gameScreen;
     FigureContainer figureContainer;
+    public Bonus bonus;
     public int score, lines;
+    boolean isBonus;
+    public int bonusMinLines;
+    boolean infSpin;
 
     public GameField(double x, double y, double w, double h, GameParameters gp, GameScreen gs) {
         super(x, y, w, h);
@@ -38,9 +44,8 @@ public class GameField extends Container{
 
         brick_size = (w-(bricks_count_x+1)*brick_gap)/bricks_count_x;
         pentamino_move_distance = brick_size+brick_gap;
-        pentamino_size = 6*brick_gap+5*brick_size;
 
-        lastMoveTime = lastFallMoveTime = -1;
+        lastMoveTime = lastFallMoveTime = lastBonusSpawnTime = -1;
         pentaminoes = new Array<>();
         moveOption = MoveOption.None;
         setSpawnFlag(true);
@@ -48,6 +53,13 @@ public class GameField extends Container{
 
         brickMap = new Brick[bricks_count_y][bricks_count_x];
         lines = score = 0;
+
+
+        isBonus = gp.bonuses;
+        if(isBonus)
+            bonusDelay = gp.bonusDelay;
+        bonusMinLines = gp.bonusMinLines;
+        infSpin = false;
     }
     public void setFigureContainer(FigureContainer fc){
         figureContainer = fc;
@@ -65,6 +77,40 @@ public class GameField extends Container{
         this.moveOption = moveOption;
     }
 
+    void trySpawnBonus(){
+        int highestLine = calcHighestLine();
+        double highestY = x + (highestLine+1)*pentamino_move_distance + brick_gap;
+        if(y+height - highestY < bonusMinLines*pentamino_move_distance)
+            return;
+        if(MathUtils.randomBoolean())
+            bonus = new Bonus(this, highestY);
+        else
+            bonus = new BadBonus(this, highestY);
+        lastBonusSpawnTime = TimeUtils.nanoTime();
+    }
+
+    public void spawnToughBrick(){
+        System.err.println("TOUGH BRICK");
+    }
+    public void setInfSpin(boolean val){
+        infSpin = val;
+    }
+    int calcHighestLine(){
+        int highest = 0;
+        while (highest <= bricks_count_y){
+            boolean isEmpty = true;
+            for(int j = 0; j<bricks_count_x; j++){
+                if(brickMap[highest][j] != null){
+                    isEmpty = false;
+                    break;
+                }
+            }
+            if(isEmpty)
+                return highest-1;
+            highest++;
+        }
+        return highest;
+    }
     public boolean addPentamino(Pentamino p){
         p.putFigure(x + (bricks_count_x/2 - 2)*pentamino_move_distance,
             y + height - ((p.y01+brick_gap)-p.y));
@@ -75,6 +121,13 @@ public class GameField extends Container{
         pentaminoes.add(p);
         activePentamino = p;
         return true;
+    }
+
+    public void increaseTempo(){
+        fallTimeGap = (long) (fallTimeGap * 0.666);
+    }
+    public void decreaseTempo(){
+        fallTimeGap = (long) (fallTimeGap * 1.5);
     }
 
     private int clearLines(){
@@ -155,6 +208,9 @@ public class GameField extends Container{
     void update(){
         long curTime = TimeUtils.nanoTime();
         if(spawnFlag){
+            if(isBonus && curTime - lastBonusSpawnTime > bonusDelay){
+                trySpawnBonus();
+            }
             if(pentaminoes.size > 0){
                 gameScreen.playFallSound();
             }
@@ -167,6 +223,8 @@ public class GameField extends Container{
         if(rotateFlag){
             activePentamino.rotate(false);
             rotateFlag = false;
+            if(infSpin)
+                lastFallMoveTime = curTime;
         }
         if(fallFlag && curTime - lastFallMoveTime > fallTimeGap) {
             activePentamino.move(0, -pentamino_move_distance);
@@ -205,6 +263,8 @@ public class GameField extends Container{
     public void render(SpriteBatch batch) {
         super.render(batch);
         update();
+        if(bonus != null)
+            bonus.render(batch);
         for (Pentamino p: pentaminoes) {
             p.render(batch);
         }

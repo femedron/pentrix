@@ -13,12 +13,15 @@ public class GameParameters {
     public  long baseTimeGap, fallTimeGap;
     public  int bricksInFigure;
     public  boolean bonuses;
+    public int bonusMinLines;
     public  int lineReward;
     public int mode;
     public int lineGoal;
     public String shortDescription, description;
     public  Rectangle gameField;
+    public int bonusDelay;
     public GameParameters(){
+        bonusMinLines = 5;
         lineGoal = 4;
         baseTimeGap = 30000000;
         fallTimeGap = baseTimeGap * 7;
