@@ -13,7 +13,7 @@ public class BadBonus extends Bonus{
     void generateBonus(){
         switch (MathUtils.random(0,2)){
             case 0:
-                gameField.spawnToughBrick();
+                //gameField.spawnToughBrick(); todo
                 break;
             case 1:
                 gameField.increaseTempo();

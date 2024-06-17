@@ -48,7 +48,7 @@ public class Brick {
     }
     private void initTexture(){
         Texture texture = new Texture(Gdx.files.internal("mine/brick16.png"));
-        textureRegion = TextureRegion.split(texture, 16, 16)[0][textureVariant];
+        textureRegion = TextureRegion.split(texture, 16, 16)[0][textureVariant]; //todo repaint
     }
 
 //    public boolean isOnLine(double yy){
