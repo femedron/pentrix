@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -29,12 +31,14 @@ public class MainMenuScreen extends BaseScreen {
     Pentrix game;
     Stage stage;
     Skin skin;
-    Texture backgroundTexture = new Texture(Gdx.files.internal("mine/navalnyi.jpg"));
+    Texture backgroundTexture = new Texture(Gdx.files.internal("mine/bg.jpg"));
     Image bg;
     BitmapFont font30, font50, minecraft50;
+    Container restartButton;
 
-    public MainMenuScreen(Pentrix game) {
+    public MainMenuScreen(Pentrix game, GameParameters gameParameters) {
         super(game);
+        this.gameParameters = gameParameters;
         instance = this;
         this.game = game;
         stage = new Stage(new ScreenViewport());
@@ -112,18 +116,24 @@ public class MainMenuScreen extends BaseScreen {
 
         //create buttons
         TextButton restart = new TextButton("Restart", skin);
-        Container restartContainer = new Container<>(restart);
+        restartButton = new Container<>(restart);
         TextButton newGame = new TextButton("New Game", skin);
-        TextButton leaderboard = new TextButton("Leaderboard", skin);
         TextButton settings = new TextButton("Settings", skin);
         TextButton quit = new TextButton("Quit", skin);
 
-        tableL.add(restartContainer);
-        //restartContainer.setVisible(false);
+        if(gameParameters == null)
+            restartButton.setVisible(false);
+        else{
+            restartButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    game.setScreen(new GameScreen(game, gameParameters));
+                }
+            });
+        }
+        tableL.add(restartButton);
         tableL.row();
         tableL.add(newGame);
-        tableL.row();
-        tableL.add(leaderboard);
         tableL.row();
         tableL.add(settings);
         tableL.row();
@@ -133,7 +143,7 @@ public class MainMenuScreen extends BaseScreen {
 
         //tableR.setBackground();
 
-        Label.LabelStyle lol = new Label.LabelStyle(font30, Color.BLACK);
+        Label.LabelStyle lol = new Label.LabelStyle(font30, Color.WHITE);
 //        lol.background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("mine/table.jpg"))));
 //        lol.background.setBottomHeight(lol.background.getBottomHeight()+100);
 //        lol.background.setTopHeight(lol.background.getTopHeight()+100);
@@ -167,7 +177,7 @@ public class MainMenuScreen extends BaseScreen {
         settings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new SettingsScreen(game));
+                game.setScreen(new SettingsScreen(game, gameParameters));
             }
         });
 

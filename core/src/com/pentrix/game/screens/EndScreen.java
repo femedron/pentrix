@@ -3,6 +3,7 @@ package com.pentrix.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,10 +20,11 @@ public class EndScreen extends MainMenuScreen{
     Sound gameOverSound;
     GameScreen gameScreen;
     public EndScreen(Pentrix game, GameScreen gs, GameParameters gp) {
-        super(game);
+        super(game, gp);
         gameParameters = gp;
         gameScreen = gs;
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal("sounds/gameover.mp3"));
+        backgroundTexture = new Texture(Gdx.files.internal("mine/navalnyi.jpg"));
     }
 
     @Override
@@ -68,7 +70,7 @@ public class EndScreen extends MainMenuScreen{
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainMenuScreen(game));
+                game.setScreen(new MainMenuScreen(game, gameParameters));
             }
         });
 

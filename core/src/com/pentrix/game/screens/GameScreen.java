@@ -108,7 +108,7 @@ public class GameScreen extends BaseScreen{
             public boolean keyDown(int keycode) {
                 switch (keycode){
                     case Keys.ESCAPE:
-                        game.setScreen(new MainMenuScreen(game));
+                        game.setScreen(new MainMenuScreen(game, gameParameters));
                         break;
                     case Keys.LEFT:
                         gameField.setMoveOption(MoveOption.Left);

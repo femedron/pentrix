@@ -30,7 +30,7 @@ public class Pentrix extends Game {
         music.play();
 
 
-        this.setScreen(new MainMenuScreen(this));
+        this.setScreen(new MainMenuScreen(this, null));
     }
     public void stopMusic(){
         if(music.isPlaying())

@@ -11,12 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.pentrix.game.AppPreferences;
 import com.pentrix.game.Pentrix;
+import com.pentrix.game.parameters.GameParameters;
 
 public class SettingsScreen extends MainMenuScreen{
     AppPreferences appPreferences;
     Slider music, sounds;
-    public SettingsScreen(Pentrix game) {
-        super(game);
+    public SettingsScreen(Pentrix game, GameParameters gp) {
+        super(game, gp);
         appPreferences = AppPreferences.instance;
     }
 
@@ -68,7 +69,7 @@ public class SettingsScreen extends MainMenuScreen{
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainMenuScreen(game));
+                game.setScreen(new MainMenuScreen(game, gameParameters));
             }
         });
     }

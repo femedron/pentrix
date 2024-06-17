@@ -13,8 +13,8 @@ import com.pentrix.game.parameters.*;
 
 public class ChooseModeScreen extends MainMenuScreen{
     public ChooseModeScreen(Pentrix game) {
-        super(game);
-        backgroundTexture = new Texture(Gdx.files.internal("mine/bogdan.png"));
+        super(game, null);
+        backgroundTexture = new Texture(Gdx.files.internal("mine/choose_mode.jpg"));
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ChooseModeScreen extends MainMenuScreen{
         useFonts();
 
         Label.LabelStyle bigLabel = new Label.LabelStyle(minecraft50, Color.WHITE);
-        skin.get(Label.LabelStyle.class).fontColor = Color.BLACK;
+        skin.get(Label.LabelStyle.class).fontColor = Color.WHITE;
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
@@ -87,7 +87,7 @@ public class ChooseModeScreen extends MainMenuScreen{
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainMenuScreen(game));
+                game.setScreen(new MainMenuScreen(game, null));
             }
         });
 

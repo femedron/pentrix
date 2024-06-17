@@ -16,9 +16,9 @@ import javax.swing.*;
 
 public class ModeDescriptionScreen extends MainMenuScreen{
     public ModeDescriptionScreen(Pentrix game, GameParameters gameParameters) {
-        super(game);
+        super(game, null);
         this.gameParameters = gameParameters;
-        backgroundTexture = new Texture(Gdx.files.internal("mine/eminem.jpg"));
+        backgroundTexture = new Texture(Gdx.files.internal("mine/mode_desc.jpg"));
     }
 
     @Override
@@ -26,8 +26,8 @@ public class ModeDescriptionScreen extends MainMenuScreen{
         init(null);
         useFonts();
 
-        Label.LabelStyle bigLabel = new Label.LabelStyle(minecraft50, Color.BLACK);
-        skin.get(Label.LabelStyle.class).fontColor = Color.BLACK;
+        Label.LabelStyle bigLabel = new Label.LabelStyle(minecraft50, Color.WHITE);
+        skin.get(Label.LabelStyle.class).fontColor = Color.WHITE;
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
