@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pentrix.game.*;
 import com.pentrix.game.Container;
@@ -29,6 +31,7 @@ public class GameScreen extends BaseScreen{
     TextContainer score, scoreTop,mode,level;
     FigureContainer figureContainer;
     Texture background = new Texture(Gdx.files.internal("mine/sky.jpg"));
+    Stage stage;
 
 
     /*font
@@ -82,6 +85,11 @@ public class GameScreen extends BaseScreen{
 
         createContainers();
         mode.setText(Integer.toString(gp.mode));
+
+        stage = new Stage(new ScreenViewport());
+        Image bg = new Image(background);
+        bg.setFillParent(true);
+        stage.addActor(bg);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
 
@@ -209,12 +217,15 @@ public class GameScreen extends BaseScreen{
         ScreenUtils.clear(Color.GREEN);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        camera.update();
+        stage.act();
+        stage.draw();
+
         game.batch.setProjectionMatrix(camera.combined);
+        camera.update();
         setScore(gameField.score);
         setLevel(gameField.lines/4 + 1);
         game.batch.begin();
-        game.batch.draw(background, 0, 0, vp.getWorldWidth(), vp.getWorldHeight());
+        //game.batch.draw(background, 0, 0, vp.getWorldWidth(), vp.getWorldHeight());
         for(Container c: containers)
             c.render(game.batch);
         game.batch.end();
@@ -224,6 +235,7 @@ public class GameScreen extends BaseScreen{
     public void dispose() {
         //todo
         background.dispose();
+        stage.dispose();
         //dropT.dispose();
         //bucketT.dispose();
 //        dropSound.dispose();
