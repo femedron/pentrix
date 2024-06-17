@@ -25,7 +25,7 @@ public class GameParameters {
         brickGap = 2;
         lineReward = 100;
         description =
-                "Level goal: clear "+lineGoal+" lines (next level +1 line)\n\n" +
+                "Level goal: clear "+lineGoal+" lines \n\n" +
                 "Line multipliers:\n" +
                 "       2 -> x2\n" +
                 "       3 -> x4\n" +

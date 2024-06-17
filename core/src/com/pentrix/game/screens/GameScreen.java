@@ -23,19 +23,19 @@ import com.pentrix.game.parameters.GameParameters;
 
 
 public class GameScreen extends BaseScreen{
-    GameParameters gp;
+    GameParameters gameParameters;
     private final double width,height;
     OrthographicCamera camera;
     Viewport vp;
     Array<Container> containers;
     GameField gameField;
-    TextContainer score, scoreTop,mode,level;
+    TextContainer scoreContainer, scoreTopContainer,modeContainer,levelContainer;
     FigureContainer figureContainer;
     Texture background = new Texture(Gdx.files.internal("mine/sky.jpg"));
     Stage stage;
 
     Sound fallSound, lineClearSound, levelupSound;
-    int lvl;
+    int level, score,levelGoal;
 
 
     /*font
@@ -79,7 +79,7 @@ public class GameScreen extends BaseScreen{
      */
     public GameScreen(final Pentrix game, GameParameters gp) {
         super(game);
-        this.gp = gp;
+        this.gameParameters = gp;
         width = gp.gameWidth;
         height = gp.gameHeight;
 
@@ -87,8 +87,10 @@ public class GameScreen extends BaseScreen{
         camera.setToOrtho(false, (float) width, (float) height);
         vp = new ExtendViewport((float) width, (float) height, camera);
 
+        levelGoal = gp.lineGoal;
+
         createContainers();
-        mode.setText(Integer.toString(gp.mode));
+        modeContainer.setText(Integer.toString(gp.mode));
 
         stage = new Stage(new ScreenViewport());
         Image bg = new Image(background);
@@ -144,13 +146,13 @@ public class GameScreen extends BaseScreen{
     private void createContainers(){
         containers = new Array<Container>();
 
-        Rectangle r = gp.gameField;
+        Rectangle r = gameParameters.gameField;
         gameField = new GameField(
                 r.x,
                 r.y,
                 r.width,
                 r.height,
-                gp,
+                gameParameters,
                 this);
 //                width/3-200,
 //                height/15,
@@ -160,59 +162,60 @@ public class GameScreen extends BaseScreen{
 
         double xx = gameField.ox+gameField.owidth+100;
         double yGap = (3*gameField.height/8)/5;
-        score = new TextContainer(
+        scoreContainer = new TextContainer(
                 xx,
                 0,
                 gameField.width,
                 gameField.height/8,
                 "Score",
                 gameField.y + gameField.height);
-        scoreTop = new TextContainer(
+        scoreTopContainer = new TextContainer(
                 xx,
                 0,
                 gameField.width,
                 gameField.height/8,
-                "Top score",
-                score.oy - yGap);
-        mode = new TextContainer(
+                "Top",
+                scoreContainer.oy - yGap);
+        scoreTopContainer.setText(Integer.toString(game.bestResults[gameParameters.mode-1].bestScore));
+        modeContainer = new TextContainer(
                 xx,
                 0,
                 gameField.width,
                 gameField.height/8,
                 "Mode",
-                scoreTop.oy - yGap);
-        level = new TextContainer(
+                scoreTopContainer.oy - yGap);
+        levelContainer = new TextContainer(
                 xx,
                 0,
                 gameField.width,
                 gameField.height/8,
                 "Level",
-                mode.oy - yGap);
+                modeContainer.oy - yGap);
         figureContainer = new FigureContainer(
                 xx,
-                level.oy - yGap,
+                levelContainer.oy - yGap,
                 gameField.width,
-                level.oy - yGap - gameField.y,
+                levelContainer.oy - yGap - gameField.y,
                 gameField,
-                gp);
+                gameParameters);
 
         containers.add(gameField);
-        containers.add(score);
-        containers.add(scoreTop);
-        containers.add(mode);
-        containers.add(level);
+        containers.add(scoreContainer);
+        containers.add(scoreTopContainer);
+        containers.add(modeContainer);
+        containers.add(levelContainer);
         containers.add(figureContainer);
     }
 
     public void setScore(int val){
-        score.setText(Integer.toString(val));
+        scoreContainer.setText(Integer.toString(val));
     }
     public void setLevel(int val){
-        level.setText(Integer.toString(val));
+        levelContainer.setText(Integer.toString(val));
     }
 
     public void gameOver(){
-        game.setScreen(new EndScreen(game));
+        game.setScreen(new EndScreen(game, this, gameParameters));
     }
 
     @Override
@@ -233,12 +236,17 @@ public class GameScreen extends BaseScreen{
         levelupSound.setVolume(id,AppPreferences.instance.getSoundVolume());
     }
     void handleLevelup(){
-        int newLvl = gameField.lines/6 + 1;
-        if(newLvl > lvl && lvl > 1) {
-            lvl = newLvl;
-            setLevel(lvl);
-            playLevelupSound();
+        int curLvl = gameField.lines/levelGoal + 1;
+        if(curLvl > level) {
+            level = curLvl;
+            setLevel(level);
+            if(level > 1)
+                playLevelupSound();
         }
+    }
+    void handleScore(){
+        score = gameField.score;
+        setScore(score);
     }
     @Override
     public void render(float delta) {
@@ -249,8 +257,10 @@ public class GameScreen extends BaseScreen{
         stage.draw();
         game.batch.setProjectionMatrix(camera.combined);
         camera.update();
-        setScore(gameField.score);
+
+        handleScore();
         handleLevelup();
+
         game.batch.begin();
         //game.batch.draw(background, 0, 0, vp.getWorldWidth(), vp.getWorldHeight());
         for(Container c: containers)

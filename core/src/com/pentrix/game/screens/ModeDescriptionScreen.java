@@ -15,7 +15,6 @@ import com.pentrix.game.parameters.GameParameters;
 import javax.swing.*;
 
 public class ModeDescriptionScreen extends MainMenuScreen{
-    GameParameters gameParameters;
     public ModeDescriptionScreen(Pentrix game, GameParameters gameParameters) {
         super(game);
         this.gameParameters = gameParameters;

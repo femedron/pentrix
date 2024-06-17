@@ -23,6 +23,7 @@ import com.pentrix.game.parameters.Mode3Parameters;
 
 
 public class MainMenuScreen extends BaseScreen {
+    GameParameters gameParameters;
     int WIDTH = GameParameters.width,HEIGHT = GameParameters.height;
     BaseScreen instance;
     Pentrix game;
@@ -162,12 +163,6 @@ public class MainMenuScreen extends BaseScreen {
                 game.setScreen(new ChooseModeScreen(game));
             }
         });
-        leaderboard.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor){
-                game.setScreen(new LeaderboardScreen(game));
-            }
-        });
 
         settings.addListener(new ChangeListener() {
             @Override
@@ -179,7 +174,7 @@ public class MainMenuScreen extends BaseScreen {
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new EndScreen(game));
+                Gdx.app.exit();
             }
         });
     }

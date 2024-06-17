@@ -13,15 +13,16 @@ public class Pentrix extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
     private Music music;
-
-    public Pentrix(){
-    }
+    public BestResult[] bestResults;
 
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont(); // use libGDX's default Arial font
 
-
+        bestResults = new BestResult[4];
+        for (int i = 0; i<4; i++){
+            bestResults[i] = new BestResult(i+1, 0,0);
+        }
         music = Gdx.audio.newMusic(Gdx.files.internal("music/funky.mp3"));
 
         // start the playback of the background music immediately
