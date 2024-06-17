@@ -6,6 +6,9 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -17,7 +20,6 @@ import com.pentrix.game.parameters.GameParameters;
 
 
 public class GameScreen extends BaseScreen{
-    public static GameScreen gameScreen;
     GameParameters gp;
     private final double width,height;
     OrthographicCamera camera;
@@ -26,6 +28,8 @@ public class GameScreen extends BaseScreen{
     GameField gameField;
     TextContainer score, scoreTop,mode,level;
     FigureContainer figureContainer;
+    Texture background = new Texture(Gdx.files.internal("mine/sky.jpg"));
+
 
     /*font
     private void createLabels(){
@@ -68,7 +72,6 @@ public class GameScreen extends BaseScreen{
      */
     public GameScreen(final Pentrix game, GameParameters gp) {
         super(game);
-        gameScreen = this;
         this.gp = gp;
         width = gp.gameWidth;
         height = gp.gameHeight;
@@ -81,9 +84,13 @@ public class GameScreen extends BaseScreen{
         mode.setText(Integer.toString(gp.mode));
 
         Gdx.input.setInputProcessor(new InputAdapter(){
+
             @Override
             public boolean keyDown(int keycode) {
                 switch (keycode){
+                    case Keys.ESCAPE:
+                        game.setScreen(MainMenuScreen.instance);
+                        break;
                     case Keys.LEFT:
                         gameField.setMoveOption(MoveOption.Left);
                         break;
@@ -126,7 +133,8 @@ public class GameScreen extends BaseScreen{
                 r.y,
                 r.width,
                 r.height,
-                gp);
+                gp,
+                this);
 //                width/3-200,
 //                height/15,
 //                width/3,
@@ -186,6 +194,10 @@ public class GameScreen extends BaseScreen{
         level.setText(Integer.toString(val));
     }
 
+    public void gameOver(){
+        game.setScreen(new EndScreen(game, MainMenuScreen.instance));
+    }
+
     @Override
     public void resize(int width, int height) {
         vp.update(width, height);
@@ -202,6 +214,7 @@ public class GameScreen extends BaseScreen{
         setScore(gameField.score);
         setLevel(gameField.lines/4 + 1);
         game.batch.begin();
+        game.batch.draw(background, 0, 0, vp.getWorldWidth(), vp.getWorldHeight());
         for(Container c: containers)
             c.render(game.batch);
         game.batch.end();
@@ -210,7 +223,7 @@ public class GameScreen extends BaseScreen{
     @Override
     public void dispose() {
         //todo
-
+        background.dispose();
         //dropT.dispose();
         //bucketT.dispose();
 //        dropSound.dispose();

@@ -181,7 +181,7 @@ public class Pentamino {
         return matrixArea.overlaps(p.matrixArea);
     }
     private void create(){
-        pattern = PatternGenerator.get(1, brickCount);
+        pattern = PatternGenerator.get(seed, brickCount);
         bricks = new Array<>();
         for(int i = brickCount; i > 0; i--){
             bricks.add(new Brick(this));

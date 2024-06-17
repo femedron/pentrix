@@ -21,12 +21,14 @@ public class GameField extends Container{
     Pentamino activePentamino;
     Brick[][] brickMap; //fixed bricks; used for line clearing
     GameParameters gameParameters;
+    GameScreen gameScreen;
     FigureContainer figureContainer;
     public int score, lines;
 
-    public GameField(double x, double y, double w, double h, GameParameters gp) {
+    public GameField(double x, double y, double w, double h, GameParameters gp, GameScreen gs) {
         super(x, y, w, h);
         this.x = x;this.y = y; width = w;height = h;
+        gameScreen = gs;
         bricks_count_x = gp.brickCountX;
         bricks_count_y = gp.brickCountY;
         brick_gap = gp.brickGap;
@@ -63,12 +65,16 @@ public class GameField extends Container{
         this.moveOption = moveOption;
     }
 
-    public void addPentamino(Pentamino p){
+    public boolean addPentamino(Pentamino p){
         p.putFigure(x + (bricks_count_x/2 - 2)*pentamino_move_distance,
             y + height - ((p.y01+brick_gap)-p.y));
+        if (p.collideWithFigures(0,0)){
+            return false;
+        }
         p.gameField = this;
         pentaminoes.add(p);
         activePentamino = p;
+        return true;
     }
 
     private int clearLines(){
@@ -94,14 +100,6 @@ public class GameField extends Container{
                 return false;
         }
         return true;
-//        double lineY = y + brick_gap + brick_size/2 + order*(brick_gap+brick_size);
-//        int bricks = 0;
-//        for (Pentamino p: pentaminoes) {
-//            bricks += p.bricksOnLine(lineY);
-//            if(bricks == bricks_count_x)
-//                return true;
-//        }
-//        return false;
     }
 
     public void updateBrickMap(){
@@ -157,7 +155,9 @@ public class GameField extends Container{
         long curTime = TimeUtils.nanoTime();
         if(spawnFlag){
             handleFilledLines();
-            addPentamino(figureContainer.releaseAndUpdate()); //and deactivate previous pentamino
+            if(!addPentamino(figureContainer.releaseAndUpdate())){
+                gameScreen.gameOver();
+            }
             spawnFlag = false;
         }
         if(rotateFlag){

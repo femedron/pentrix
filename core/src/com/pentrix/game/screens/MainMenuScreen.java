@@ -19,8 +19,9 @@ import com.pentrix.game.parameters.Mode3Parameters;
 
 
 public class MainMenuScreen extends BaseScreen {
+    public static MainMenuScreen instance;
     int WIDTH = GameParameters.width,HEIGHT = GameParameters.height;
-    BaseScreen instance, parent;
+    BaseScreen parent;
     Pentrix game;
     Stage stage;
     Skin skin;
@@ -29,7 +30,7 @@ public class MainMenuScreen extends BaseScreen {
 
     public MainMenuScreen(Pentrix game, BaseScreen parent) {
         super(game);
-        this.instance = this;
+        instance = this;
         this.parent = parent;
         this.game = game;
         stage = new Stage(new ScreenViewport());
